@@ -25,6 +25,7 @@ namespace BsuirScheduleUniversal
         public MainPage()
         {
             this.InitializeComponent();
+            PairsListView.ItemsSource = BsuirScheduleLib.BsuirApi.Schedule.Loader.LoadPairs("551005", DateTime.Now, 2);
         }
     }
 }
