@@ -20,11 +20,14 @@ namespace BsuirScheduleUniversal
 {
     public class DaySchedule
     {
+        private readonly DateTime _date;
         public List<Pair> Pairs { get; set; }
+        public string WeekDayName => $"{_date.ToShortDateString()} {_date.DayOfWeek.ToString()}";
 
-        public DaySchedule(List<Pair> pairs)
+        public DaySchedule(string group, DateTime date, int subGroup)
         {
-            Pairs = pairs;
+            _date = date;
+            Pairs = Loader.LoadPairs(group, date, subGroup);
         }
     }
     /// <summary>
@@ -35,19 +38,13 @@ namespace BsuirScheduleUniversal
         public MainPage()
         {
             this.InitializeComponent();
-            List<DaySchedule> schedule = new List<DaySchedule>
+            List<DaySchedule> schedule = new List<DaySchedule>();
+            for(int i = -30; i < 30; i++)
             {
-                new DaySchedule(Loader.LoadPairs("551005", DateTime.Today, 2)),
-                new DaySchedule(Loader.LoadPairs("551005", DateTime.Today.AddDays(1), 2)),
-                new DaySchedule(Loader.LoadPairs("551005", DateTime.Today.AddDays(2), 2)),
-                new DaySchedule(Loader.LoadPairs("551005", DateTime.Today.AddDays(3), 2)),
-                new DaySchedule(Loader.LoadPairs("551005", DateTime.Today.AddDays(4), 2)),
-                new DaySchedule(Loader.LoadPairs("551005", DateTime.Today.AddDays(5), 2))
+                schedule.Add(new DaySchedule("551005", DateTime.Today.AddDays(i), 2));
             };
             ScheduleGridView.ItemsSource = schedule;
-            //Panel.Children.Add();
 
-            //PairsListView.ItemsSource = Loader.LoadPairs("551005", DateTime.Now, 2);
         }
     }
 }
