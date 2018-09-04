@@ -9,30 +9,37 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <ListView x:Name="PairsListView">
-        <ListView.ItemTemplate>
-            <DataTemplate x:DataType="schedule:Pair">
-                <Grid ColumnSpacing="5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="47"/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="{x:Bind subject}" Foreground="Teal" 
-                               FontSize="15" Grid.Column="0"/>
-                    <TextBlock Text="{x:Bind Auditory}" Foreground="Teal" 
-                               FontSize="15" Grid.Column="1"/>
-                    <TextBlock Text="{x:Bind lessonTime}" Foreground="Teal" 
-                               FontSize="15" Grid.Column="2"/>
-                    <TextBlock Text="{x:Bind numSubgroup}" Foreground="Teal" 
-                               FontSize="15" Grid.Column="3"/>
-                    <TextBlock Text="{x:Bind lessonType}" Foreground="Teal" 
-                               FontSize="15" Grid.Column="4"/>
-                </Grid>
+    <GridView x:Name="ScheduleGridView">
+        <GridView.ItemTemplate>
+            <DataTemplate x:DataType="local:DaySchedule">
+                <ListView x:Name="PairsListView" ItemsSource="{Binding Pairs}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="schedule:Pair">
+                            <Grid ColumnSpacing="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="47"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{x:Bind subject}" Foreground="Teal" 
+                                               FontSize="15" Grid.Column="0"/>
+                                <TextBlock Text="{x:Bind Auditory}" Foreground="Teal" 
+                                               FontSize="15" Grid.Column="1"/>
+                                <TextBlock Text="{x:Bind lessonTime}" Foreground="Teal" 
+                                               FontSize="15" Grid.Column="2"/>
+                                <TextBlock Text="{x:Bind numSubgroup}" Foreground="Teal" 
+                                               FontSize="15" Grid.Column="3"/>
+                                <TextBlock Text="{x:Bind lessonType}" Foreground="Teal" 
+                                               FontSize="15" Grid.Column="4"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>
+        </GridView.ItemTemplate>
+    </GridView>
+
 
 </Page>
