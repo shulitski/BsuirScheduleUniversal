@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -35,16 +36,38 @@ namespace BsuirScheduleUniversal
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private int _checkedSubgroup = 0;
+        private string _group = "551005";
+
         public MainPage()
         {
             this.InitializeComponent();
+            Reload();
+        }
+
+        private void Reload()
+        {
             List<DaySchedule> schedule = new List<DaySchedule>();
-            for(int i = -30; i < 30; i++)
+            for (int i = -30; i < 30; i++)
             {
-                schedule.Add(new DaySchedule("551005", DateTime.Today.AddDays(i), 2));
+                schedule.Add(new DaySchedule(_group, DateTime.Today.AddDays(i), _checkedSubgroup));
             };
             ScheduleGridView.ItemsSource = schedule;
+        }
 
+        private void GroupTextbox_OnKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Enter)
+            {
+                _group = GroupTextBox.Text;
+                Reload();
+            }
+        }
+
+        private void SubgroupChecked(object sender, RoutedEventArgs e)
+        {
+            _checkedSubgroup = int.Parse((string)((RadioButton) sender).Tag);
+            Reload();
         }
     }
 }

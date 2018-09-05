@@ -9,38 +9,54 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <GridView x:Name="ScheduleGridView" Width="2000">
-        <GridView.ItemTemplate>
-            <DataTemplate x:DataType="local:DaySchedule">
-                <StackPanel>
-                    <TextBlock TextAlignment="Center" Text="{Binding WeekDayName}" />
-                    <ListView x:Name="PairsListView" Width ="270"  Height="300" ItemsSource="{Binding Pairs}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="schedule:Pair">
-                                <Grid ColumnSpacing="5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="70"/>
-                                        <ColumnDefinition Width="50"/>
-                                        <ColumnDefinition Width="80"/>
-                                        <ColumnDefinition Width="10"/>
-                                        <ColumnDefinition Width="20"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="{x:Bind subject}" Foreground="Teal" 
-                                               FontSize="15" Grid.Column="0"/>
-                                    <TextBlock Text="{x:Bind Auditory}" Foreground="Teal" 
-                                               FontSize="15" Grid.Column="1"/>
-                                    <TextBlock Text="{x:Bind lessonTime}" Foreground="Teal" 
-                                               FontSize="15" Grid.Column="2"/>
-                                    <TextBlock Text="{x:Bind numSubgroup}" Foreground="Teal" 
-                                               FontSize="15" Grid.Column="3"/>
-                                    <TextBlock Text="{x:Bind lessonType}" Foreground="Teal" 
-                                               FontSize="15" Grid.Column="4"/>
-                                </Grid>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+    <ScrollViewer>
+        <StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBox x:Name="GroupTextBox" 
+                         PlaceholderText="Group"
+                         Width="150"
+                         KeyDown="GroupTextbox_OnKeyDown" />
+                <StackPanel Margin="10 0 0 0" Orientation="Horizontal">
+                    <TextBlock Text="SubGroup:" Margin="0 0 10 0" VerticalAlignment="Center"/>
+                    <RadioButton Content="Full" Tag="0" Checked="SubgroupChecked" IsChecked="True"/>
+                    <RadioButton Content="First" Tag="1" Checked="SubgroupChecked"/>
+                    <RadioButton Content="Second" Tag="2" Checked="SubgroupChecked"/>
                 </StackPanel>
-            </DataTemplate>
-        </GridView.ItemTemplate>
-    </GridView>
+            </StackPanel>
+            <GridView x:Name="ScheduleGridView" Width="2000">
+                <GridView.ItemTemplate>
+                    <DataTemplate x:DataType="local:DaySchedule">
+                        <StackPanel>
+                            <TextBlock TextAlignment="Center" Text="{Binding WeekDayName}" />
+                            <ListView x:Name="PairsListView" Width ="250"  Height="300" ItemsSource="{Binding Pairs}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="schedule:Pair">
+                                        <Grid ColumnSpacing="5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="65"/>
+                                                <ColumnDefinition Width="45"/>
+                                                <ColumnDefinition Width="75"/>
+                                                <ColumnDefinition Width="10"/>
+                                                <ColumnDefinition Width="20"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{x:Bind subject}" Foreground="Teal" 
+                                                       FontSize="15" Grid.Column="0"/>
+                                            <TextBlock Text="{x:Bind Auditory}" Foreground="Teal" 
+                                                       FontSize="15" Grid.Column="1"/>
+                                            <TextBlock Text="{x:Bind lessonTime}" Foreground="Teal" 
+                                                       FontSize="15" Grid.Column="2"/>
+                                            <TextBlock Text="{x:Bind numSubgroup}" Foreground="Teal" 
+                                                       FontSize="15" Grid.Column="3"/>
+                                            <TextBlock Text="{x:Bind lessonType}" Foreground="Teal" 
+                                                       FontSize="15" Grid.Column="4"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+        </StackPanel>
+    </ScrollViewer>
 </Page>

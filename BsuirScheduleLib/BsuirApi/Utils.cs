@@ -42,5 +42,10 @@ namespace BsuirScheduleLib.BsuirApi
             const int magic = 2;
             return (date.DayOfYear / 7 + magic) % 4 + 1;
         }
+
+        internal static bool FilterSubgroup(int filter, int subgroup)
+        {
+            return (filter == 0) || (subgroup == 0) || (subgroup == filter);
+        }
     }
 }

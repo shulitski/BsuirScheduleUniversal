@@ -35,7 +35,7 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
             var response = Load(group);
             var schedule = response.schedules.Find(s => Utils.StringToDayOfWeek(s.weekday) == day.DayOfWeek);
             return schedule?.schedule?.FindAll(pair => 
-                (pair.numSubgroup == subgroup || pair.numSubgroup == 0)
+                Utils.FilterSubgroup(subgroup, pair.numSubgroup)
                 && pair.weekNumber.Contains(day.BsuirWeekNum()));
         }
     }
