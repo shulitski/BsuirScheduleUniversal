@@ -38,9 +38,7 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
         {
             if (cache.ContainsKey(group)) return cache[group];
 
-
             string json;
-
             string fileName = $"group_schedule_{group}.json";
             
             if(IsGroupCached(group))

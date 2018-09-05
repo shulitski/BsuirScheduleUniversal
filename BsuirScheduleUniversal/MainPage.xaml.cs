@@ -15,19 +15,26 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using BsuirScheduleLib.BsuirApi.Schedule;
+using BsuirScheduleUniversal.ViewModels;
 
 namespace BsuirScheduleUniversal
 {
     public class DaySchedule
     {
         private readonly DateTime _date;
-        public List<Pair> Pairs { get; set; }
+        public List<PairVM> Pairs { get; set; } = new List<PairVM>();
         public string WeekDayName => $"{_date.ToShortDateString()} {_date.DayOfWeek.ToString()}";
 
         public DaySchedule(string group, DateTime date, int subGroup)
         {
             _date = date;
-            Pairs = Loader.LoadPairs(group, date, subGroup);
+            var pairs = Loader.LoadPairs(group, date, subGroup);
+            if(pairs == null) return;
+
+            foreach (var pair in pairs)
+            {
+                Pairs.Add(new PairVM(pair));
+            }
         }
     }
 
