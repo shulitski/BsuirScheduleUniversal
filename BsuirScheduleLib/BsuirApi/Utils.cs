@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using BsuirScheduleLib.BsuirApi.Schedule;
 using Newtonsoft.Json;
 
@@ -15,7 +16,7 @@ namespace BsuirScheduleLib.BsuirApi
         {
             using (var client = new System.Net.Http.HttpClient())
             {
-                var task = client.GetStringAsync("https://students.bsuir.by/api/v1/studentGroup/schedule?studentGroup=551005");
+                var task = client.GetStringAsync(url);
                 task.Wait();
                 return task.Result;
             }
@@ -46,6 +47,12 @@ namespace BsuirScheduleLib.BsuirApi
         internal static bool FilterSubgroup(int filter, int subgroup)
         {
             return (filter == 0) || (subgroup == 0) || (subgroup == filter);
+        }
+
+        internal static T WaitResult<T>(this IAsyncOperation<T> operation)
+        {
+            operation.AsTask().Wait();
+            return operation.GetResults();
         }
     }
 }

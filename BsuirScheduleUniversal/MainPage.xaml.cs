@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -14,8 +15,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using BsuirScheduleLib.BsuirApi.Schedule;
-
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace BsuirScheduleUniversal
 {
@@ -31,24 +30,46 @@ namespace BsuirScheduleUniversal
             Pairs = Loader.LoadPairs(group, date, subGroup);
         }
     }
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
+
     public sealed partial class MainPage : Page
     {
-        private int _checkedSubgroup = 0;
-        private string _group = "551005";
+        private static ApplicationDataContainer LocalSettings => ApplicationData.Current.LocalSettings;
+
+        private int CheckedSubgroup
+        {
+            get => (LocalSettings.Values["checkedSubgroup"] as int?) ?? 0;
+            set
+            {
+                LocalSettings.Values["checkedSubgroup"] = (int?) value;
+                Reload();
+            }
+        }
+
+        private bool IsSubgroup0 => CheckedSubgroup == 0;
+        private bool IsSubgroup1 => CheckedSubgroup == 1;
+        private bool IsSubgroup2 => CheckedSubgroup == 2;
+
+        public string SelectedGroup
+        {
+            get => LocalSettings.Values["selectedGroup"] as string;
+            set
+            {
+                LocalSettings.Values["selectedGroup"] = value;
+                Reload();
+            }
+        }
 
         public MainPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             Reload();
+            FillGroupCombobox();
         }
 
         private void Reload()
         {
-            if (ScheduleGridView == null)
-                return;
+            if (ScheduleGridView == null) return;
+            if(SelectedGroup == null) return;
 
             List<DaySchedule> schedule = new List<DaySchedule>();
             DateTime day = DateTime.Today;
@@ -62,27 +83,50 @@ namespace BsuirScheduleUniversal
             }
             for (int i = 0; i < 30; i++)
             {
-                schedule.Add(new DaySchedule(_group, day.AddDays(i), _checkedSubgroup));
-            };
+                schedule.Add(new DaySchedule(SelectedGroup, day.AddDays(i), CheckedSubgroup));
+            }
 
             ScheduleGridView.ItemsSource = schedule;
             ScheduleGridView.SelectedIndex = currentDayIndex;
-            //ScheduleGridView.ScrollIntoView(ScheduleGridView.Items[30]);
-        }
-
-        private void GroupTextbox_OnKeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key == VirtualKey.Enter)
-            {
-                _group = GroupTextBox.Text;
-                Reload();
-            }
         }
 
         private void SubgroupChecked(object sender, RoutedEventArgs e)
         {
-            _checkedSubgroup = int.Parse((string)((RadioButton) sender).Tag);
-            Reload();
+            CheckedSubgroup = int.Parse((string)((RadioButton) sender).Tag);
+        }
+
+        private void FillGroupCombobox()
+        {
+            GroupComboBox.Items.Clear();
+            if (Loader.CachedGroupsArray != null)
+            {
+                foreach (var group in Loader.CachedGroupsArray)
+                {
+                    GroupComboBox.Items.Add(group);
+                    if (group == SelectedGroup)
+                        GroupComboBox.SelectedItem = group;
+                }
+            }
+            GroupComboBox.Items.Add("Load group...");
+        }
+
+        private async void GroupSelected(object sender, SelectionChangedEventArgs e)
+        {
+            if(string.IsNullOrEmpty(GroupComboBox.SelectedItem?.ToString())) return;
+
+            if (GroupComboBox.SelectedItem?.ToString() == "Load group...")
+            {
+                AddGroupDialog dlg = new AddGroupDialog();
+                await dlg.ShowAsync();
+                if (dlg.Value == null) return;
+
+                SelectedGroup = dlg.Value;
+                FillGroupCombobox();
+            }
+            else
+            {
+                SelectedGroup = GroupComboBox.SelectedItem?.ToString();
+            }
         }
     }
 }

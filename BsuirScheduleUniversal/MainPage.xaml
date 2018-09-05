@@ -12,15 +12,16 @@
     <ScrollViewer>
         <StackPanel>
             <StackPanel Orientation="Horizontal">
-                <TextBox x:Name="GroupTextBox" 
-                         PlaceholderText="Group"
+                <ComboBox x:Name="GroupComboBox" 
+                          PlaceholderText="{x:Bind SelectedGroup}"
                          Width="150"
-                         KeyDown="GroupTextbox_OnKeyDown" />
-                <StackPanel Margin="10 0 0 0" Orientation="Horizontal">
+                         
+                         SelectionChanged="GroupSelected" />
+                    <StackPanel Margin="10 0 0 0" Orientation="Horizontal">
                     <TextBlock Text="SubGroup:" Margin="0 0 10 0" VerticalAlignment="Center"/>
-                    <RadioButton Content="Full" Tag="0" Checked="SubgroupChecked" IsChecked="True"/>
-                    <RadioButton Content="First" Tag="1" Checked="SubgroupChecked"/>
-                    <RadioButton Content="Second" Tag="2" Checked="SubgroupChecked"/>
+                    <RadioButton Content="Full" Tag="0" Checked="SubgroupChecked" IsChecked="{x:Bind IsSubgroup0}"/>
+                    <RadioButton Content="First" Tag="1" Checked="SubgroupChecked" IsChecked="{x:Bind IsSubgroup1}"/>
+                    <RadioButton Content="Second" Tag="2" Checked="SubgroupChecked" IsChecked="{x:Bind IsSubgroup2}"/>
                 </StackPanel>
             </StackPanel>
             <GridView x:Name="ScheduleGridView" Width="2000">
@@ -34,25 +35,25 @@
                                         <StackPanel Orientation="Horizontal">
                                             <StackPanel Orientation="Vertical">
                                                 <TextBlock Text="{x:Bind startLessonTime}" Foreground="Teal" 
-                                                       FontSize="15" Grid.Column="2"/>
+                                                       FontSize="15"/>
                                                 <TextBlock Text="{x:Bind endLessonTime}" Foreground="Teal" 
-                                                       FontSize="15" Grid.Column="2"/>
+                                                       FontSize="15"/>
                                             </StackPanel>
                                             <StackPanel Margin="10 0 0 0" Orientation="Vertical">
                                                 <TextBlock Text="{x:Bind subject}" Foreground="Teal" 
-                                                       FontSize="15" Grid.Column="0"/>
+                                                       FontSize="15"/>
                                                 <TextBlock Text="{x:Bind Auditory}" Foreground="Teal" 
-                                                       FontSize="15" Grid.Column="1"/>
+                                                       FontSize="15"/>
                                             </StackPanel>
 
                                             <TextBlock Margin="10 0 0 0" Text="{x:Bind lessonType}" Foreground="Teal" 
-                                                       FontSize="15" Grid.Column="4"/>
+                                                       FontSize="15"/>
                                             
                                             <TextBlock Margin="10 0 0 0" Text="{x:Bind numSubgroup}" Foreground="Teal" 
-                                                       FontSize="15" Grid.Column="3"/>
+                                                       FontSize="15"/>
 
                                             <TextBlock Margin="10 0 0 0" Text="{x:Bind EmployeeName}" Foreground="Teal" 
-                                                       FontSize="15" Grid.Column="3"/>
+                                                       FontSize="15"/>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
