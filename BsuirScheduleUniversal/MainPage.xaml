@@ -10,7 +10,7 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <ScrollViewer>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto">
         <StackPanel>
             <StackPanel Orientation="Horizontal">
                 <ComboBox x:Name="GroupComboBox" 
