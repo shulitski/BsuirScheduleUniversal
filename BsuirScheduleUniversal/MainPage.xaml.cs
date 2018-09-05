@@ -47,12 +47,27 @@ namespace BsuirScheduleUniversal
 
         private void Reload()
         {
+            if (ScheduleGridView == null)
+                return;
+
             List<DaySchedule> schedule = new List<DaySchedule>();
-            for (int i = -30; i < 30; i++)
+            DateTime day = DateTime.Today;
+            int currentDayIndex = 0;
+            for (int i = 0; i < 7; i++)
             {
-                schedule.Add(new DaySchedule(_group, DateTime.Today.AddDays(i), _checkedSubgroup));
+                day = day.AddDays(-1);
+                currentDayIndex++;
+                if (day.DayOfWeek == DayOfWeek.Monday)
+                    break;
+            }
+            for (int i = 0; i < 30; i++)
+            {
+                schedule.Add(new DaySchedule(_group, day.AddDays(i), _checkedSubgroup));
             };
+
             ScheduleGridView.ItemsSource = schedule;
+            ScheduleGridView.SelectedIndex = currentDayIndex;
+            //ScheduleGridView.ScrollIntoView(ScheduleGridView.Items[30]);
         }
 
         private void GroupTextbox_OnKeyDown(object sender, KeyRoutedEventArgs e)

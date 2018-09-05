@@ -23,6 +23,7 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
         public bool zaoch { get; set; }
 
         public string Auditory => auditory.Aggregate("", (s, s1) => s + s1);
-        
+        public string EmployeeName => employee.Count > 0 ? employee.First().fio : "";
+
     }
 }

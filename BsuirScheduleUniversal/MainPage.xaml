@@ -28,28 +28,32 @@
                     <DataTemplate x:DataType="local:DaySchedule">
                         <StackPanel>
                             <TextBlock TextAlignment="Center" Text="{Binding WeekDayName}" />
-                            <ListView x:Name="PairsListView" Width ="250"  Height="300" ItemsSource="{Binding Pairs}">
+                            <ListView x:Name="PairsListView" Width ="275"  Height="300" ItemsSource="{Binding Pairs}">
                                 <ListView.ItemTemplate>
                                     <DataTemplate x:DataType="schedule:Pair">
-                                        <Grid ColumnSpacing="5">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="65"/>
-                                                <ColumnDefinition Width="45"/>
-                                                <ColumnDefinition Width="75"/>
-                                                <ColumnDefinition Width="10"/>
-                                                <ColumnDefinition Width="20"/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Text="{x:Bind subject}" Foreground="Teal" 
-                                                       FontSize="15" Grid.Column="0"/>
-                                            <TextBlock Text="{x:Bind Auditory}" Foreground="Teal" 
-                                                       FontSize="15" Grid.Column="1"/>
-                                            <TextBlock Text="{x:Bind lessonTime}" Foreground="Teal" 
+                                        <StackPanel Orientation="Horizontal">
+                                            <StackPanel Orientation="Vertical">
+                                                <TextBlock Text="{x:Bind startLessonTime}" Foreground="Teal" 
                                                        FontSize="15" Grid.Column="2"/>
-                                            <TextBlock Text="{x:Bind numSubgroup}" Foreground="Teal" 
-                                                       FontSize="15" Grid.Column="3"/>
-                                            <TextBlock Text="{x:Bind lessonType}" Foreground="Teal" 
+                                                <TextBlock Text="{x:Bind endLessonTime}" Foreground="Teal" 
+                                                       FontSize="15" Grid.Column="2"/>
+                                            </StackPanel>
+                                            <StackPanel Margin="10 0 0 0" Orientation="Vertical">
+                                                <TextBlock Text="{x:Bind subject}" Foreground="Teal" 
+                                                       FontSize="15" Grid.Column="0"/>
+                                                <TextBlock Text="{x:Bind Auditory}" Foreground="Teal" 
+                                                       FontSize="15" Grid.Column="1"/>
+                                            </StackPanel>
+
+                                            <TextBlock Margin="10 0 0 0" Text="{x:Bind lessonType}" Foreground="Teal" 
                                                        FontSize="15" Grid.Column="4"/>
-                                        </Grid>
+                                            
+                                            <TextBlock Margin="10 0 0 0" Text="{x:Bind numSubgroup}" Foreground="Teal" 
+                                                       FontSize="15" Grid.Column="3"/>
+
+                                            <TextBlock Margin="10 0 0 0" Text="{x:Bind EmployeeName}" Foreground="Teal" 
+                                                       FontSize="15" Grid.Column="3"/>
+                                        </StackPanel>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
