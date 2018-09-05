@@ -21,9 +21,5 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
         public string lessonType { get; set; }
         public List<Employee> employee { get; set; }
         public bool zaoch { get; set; }
-
-        public string Auditory => auditory.Aggregate("", (s, s1) => s + s1);
-        public string EmployeeName => employee.Count > 0 ? employee.First().fio : "";
-
     }
 }
