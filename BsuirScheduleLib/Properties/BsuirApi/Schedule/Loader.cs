@@ -34,7 +34,7 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
             cache.Add(group, scheduleResponse);
         }
 
-        public static ScheduleResponse Load(string group)
+        public static async Task<ScheduleResponse> Load(string group)
         {
             if (cache.ContainsKey(group)) return cache[group];
 
@@ -43,16 +43,16 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
             
             if(IsGroupCached(group))
             {
-                StorageFile file = LocalFolder.GetFileAsync(fileName).WaitResult();
-                json = FileIO.ReadTextAsync(file).WaitResult();
+                StorageFile file = await LocalFolder.GetFileAsync(fileName);
+                json = await FileIO.ReadTextAsync(file);
             }
             else
             {
                 //Schedule not found
                 string url = $"https://students.bsuir.by/api/v1/studentGroup/schedule?studentGroup={group}";
-                json = Utils.LoadString(url);
-                StorageFile sampleFile = LocalFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting).WaitResult();
-                FileIO.WriteTextAsync(sampleFile, json).AsTask().Wait();
+                json = await Utils.LoadString(url);
+                StorageFile sampleFile = await LocalFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+                await FileIO.WriteTextAsync(sampleFile, json);
                 if(string.IsNullOrEmpty(CachedGroups))
                     CachedGroups += $"{group}";
                 else
@@ -64,9 +64,9 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
             return scheduleResponse;
         }
 
-        public static List<Pair> LoadPairs(string group, DateTime day, int subgroup)
+        public static async Task<List<Pair>> LoadPairs(string group, DateTime day, int subgroup)
         {
-            var response = Load(group);
+            var response = await Load(group);
             var schedule = response.schedules.Find(s => Utils.StringToDayOfWeek(s.weekday) == day.DayOfWeek);
             return schedule?.schedule?.FindAll(pair => 
                 Utils.FilterSubgroup(subgroup, pair.numSubgroup)

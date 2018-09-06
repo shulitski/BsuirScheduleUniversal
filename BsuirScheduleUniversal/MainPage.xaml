@@ -14,62 +14,21 @@
         <StackPanel>
             <StackPanel Orientation="Horizontal">
                 <ComboBox x:Name="GroupComboBox" 
-                          PlaceholderText="{x:Bind SelectedGroup}"
+                         PlaceholderText="{x:Bind SelectedGroup, Mode=OneWay}"
                          Width="150"
-                         
                          SelectionChanged="GroupSelected" />
                     <StackPanel Margin="10 0 0 0" Orientation="Horizontal">
                     <TextBlock Text="SubGroup:" Margin="0 0 10 0" VerticalAlignment="Center"/>
                     <RadioButton Content="Full" Tag="0" Checked="SubgroupChecked" IsChecked="{x:Bind IsSubgroup0}"/>
                     <RadioButton Content="First" Tag="1" Checked="SubgroupChecked" IsChecked="{x:Bind IsSubgroup1}"/>
                     <RadioButton Content="Second" Tag="2" Checked="SubgroupChecked" IsChecked="{x:Bind IsSubgroup2}"/>
+                    <ProgressRing IsActive="{x:Bind IsBusy, Mode=OneWay}" Foreground="White" />
                 </StackPanel>
             </StackPanel>
             <GridView x:Name="ScheduleGridView" Width="2000">
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="local:DaySchedule">
-                        <StackPanel>
-                            <TextBlock TextAlignment="Center" Text="{Binding WeekDayName}" />
-                            <ListView x:Name="PairsListView" Width ="275"  Height="300" ItemsSource="{Binding Pairs}">
-                                <ListView.ItemTemplate>
-                                    <DataTemplate x:DataType="vm:PairVM">
-                                        <controls:DockPanel Width="275">
-                                            <StackPanel controls:DockPanel.Dock="Left" Orientation="Vertical">
-                                                <TextBlock Text="{x:Bind startLessonTime}" Foreground="Teal" 
-                                                       FontSize="15"/>
-                                                <TextBlock Text="{x:Bind endLessonTime}" Foreground="Teal" 
-                                                       FontSize="15"/>
-                                            </StackPanel>
-                                            <StackPanel Margin="5 0 0 0" Orientation="Vertical">
-                                                <Rectangle Width="5" Height="10" Stroke="Aqua" Fill="{x:Bind WeekBrush1}" />
-                                                <Rectangle Width="5" Height="10" Stroke="Aqua" Fill="{x:Bind WeekBrush2}" />
-                                                <Rectangle Width="5" Height="10" Stroke="Aqua" Fill="{x:Bind WeekBrush3}" />
-                                                <Rectangle Width="5" Height="10" Stroke="Aqua" Fill="{x:Bind WeekBrush4}" />
-                                            </StackPanel>
-                                            <StackPanel controls:DockPanel.Dock="Left" Margin="5 0 0 0" Orientation="Vertical">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="{x:Bind subject}" Foreground="Teal" 
-                                                           FontSize="15"/>
-                                                    <TextBlock Text="{x:Bind LessonType}" Foreground="{x:Bind LessonTypeBrush}" 
-                                                               FontSize="15"/>
-                                                </StackPanel>
-                                                <TextBlock Text="{x:Bind Auditory}" Foreground="Teal" 
-                                                       FontSize="15"/>
-                                            </StackPanel>
-
-                                            <StackPanel controls:DockPanel.Dock="Right" Margin="0 0 25 0" Orientation="Vertical">
-                                                <TextBlock HorizontalAlignment="Right" Text="{x:Bind NumSubgroup}" Foreground="Teal" 
-                                                           FontSize="12"/>
-
-                                                <TextBlock HorizontalAlignment="Right" Text="{x:Bind EmployeeName}" Foreground="Teal" 
-                                                           FontSize="12"/>
-                                            </StackPanel>
-                                            
-                                        </controls:DockPanel>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
-                        </StackPanel>
+                        <local:DayScheduleControl DaySchedule="{x:Bind}" />
                     </DataTemplate>
                 </GridView.ItemTemplate>
             </GridView>

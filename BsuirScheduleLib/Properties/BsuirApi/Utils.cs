@@ -12,13 +12,12 @@ namespace BsuirScheduleLib.BsuirApi
 {
     internal static class Utils
     {
-        internal static string LoadString(string url)
+        internal static async Task<string> LoadString(string url)
         {
             using (var client = new System.Net.Http.HttpClient())
             {
-                var task = client.GetStringAsync(url);
-                task.Wait();
-                return task.Result;
+                client.Timeout = TimeSpan.FromSeconds(5);
+                return await client.GetStringAsync(url);
             }
         }
 

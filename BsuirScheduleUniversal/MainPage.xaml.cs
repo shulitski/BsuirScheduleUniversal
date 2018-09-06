@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
@@ -16,6 +18,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using BsuirScheduleLib.BsuirApi.Schedule;
 using BsuirScheduleUniversal.ViewModels;
+using System.Runtime.CompilerServices;
 
 namespace BsuirScheduleUniversal
 {
@@ -25,22 +28,47 @@ namespace BsuirScheduleUniversal
         public List<PairVM> Pairs { get; set; } = new List<PairVM>();
         public string WeekDayName => $"{_date.ToShortDateString()} {_date.DayOfWeek.ToString()}";
 
-        public DaySchedule(string group, DateTime date, int subGroup)
+        private DaySchedule(DateTime date)
         {
             _date = date;
-            var pairs = Loader.LoadPairs(group, date, subGroup);
-            if(pairs == null) return;
+        }
+
+        public static async Task<DaySchedule> Create(string group, DateTime date, int subGroup)
+        {
+            DaySchedule result = new DaySchedule(date);
+            var pairs = await Loader.LoadPairs(group, date, subGroup);
+            if (pairs == null) return result;
 
             foreach (var pair in pairs)
             {
-                Pairs.Add(new PairVM(pair));
+                result.Pairs.Add(new PairVM(pair));
             }
+
+            return result;
         }
     }
 
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
         private static ApplicationDataContainer LocalSettings => ApplicationData.Current.LocalSettings;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+
+        private bool _isBusy = false;
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set
+            {
+                _isBusy = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         private int CheckedSubgroup
         {
@@ -62,6 +90,7 @@ namespace BsuirScheduleUniversal
             set
             {
                 LocalSettings.Values["selectedGroup"] = value;
+                NotifyPropertyChanged();
                 Reload();
             }
         }
@@ -73,28 +102,40 @@ namespace BsuirScheduleUniversal
             FillGroupCombobox();
         }
 
-        private void Reload()
+        private async void Reload()
         {
             if (ScheduleGridView == null) return;
-            if(SelectedGroup == null) return;
+            if (SelectedGroup == null) return;
+            IsBusy = true;
 
-            List<DaySchedule> schedule = new List<DaySchedule>();
-            DateTime day = DateTime.Today;
-            int currentDayIndex = 0;
-            for (int i = 0; i < 7; i++)
+            try
             {
-                day = day.AddDays(-1);
-                currentDayIndex++;
-                if (day.DayOfWeek == DayOfWeek.Monday)
-                    break;
+                ScheduleGridView.ItemsSource = null;
+
+                List<DaySchedule> schedule = new List<DaySchedule>();
+                DateTime day = DateTime.Today;
+                int currentDayIndex = 0;
+                for (int i = 0; i < 7; i++)
+                {
+                    day = day.AddDays(-1);
+                    currentDayIndex++;
+                    if (day.DayOfWeek == DayOfWeek.Monday)
+                        break;
+                }
+                for (int i = 0; i < 30; i++)
+                {
+                    schedule.Add(await DaySchedule.Create(SelectedGroup, day.AddDays(i), CheckedSubgroup));
+                }
+
+                ScheduleGridView.ItemsSource = schedule;
+                ScheduleGridView.SelectedIndex = currentDayIndex;
             }
-            for (int i = 0; i < 30; i++)
+            catch (Exception)
             {
-                schedule.Add(new DaySchedule(SelectedGroup, day.AddDays(i), CheckedSubgroup));
+                // ignored
             }
 
-            ScheduleGridView.ItemsSource = schedule;
-            ScheduleGridView.SelectedIndex = currentDayIndex;
+            IsBusy = false;
         }
 
         private void SubgroupChecked(object sender, RoutedEventArgs e)
