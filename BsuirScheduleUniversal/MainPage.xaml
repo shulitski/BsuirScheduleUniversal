@@ -10,21 +10,28 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <ScrollViewer HorizontalScrollBarVisibility="Auto">
-        <StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <ComboBox x:Name="GroupComboBox" 
-                         PlaceholderText="{x:Bind SelectedGroup, Mode=OneWay}"
-                         Width="150"
-                         SelectionChanged="GroupSelected" />
-                    <StackPanel Margin="10 0 0 0" Orientation="Horizontal">
-                    <TextBlock Text="SubGroup:" Margin="0 0 10 0" VerticalAlignment="Center"/>
-                    <RadioButton Content="Full" Tag="0" Checked="SubgroupChecked" IsChecked="{x:Bind IsSubgroup0}"/>
-                    <RadioButton Content="First" Tag="1" Checked="SubgroupChecked" IsChecked="{x:Bind IsSubgroup1}"/>
-                    <RadioButton Content="Second" Tag="2" Checked="SubgroupChecked" IsChecked="{x:Bind IsSubgroup2}"/>
-                    <ProgressRing IsActive="{x:Bind IsBusy, Mode=OneWay}" Foreground="White" />
-                </StackPanel>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Grid.Row="0">
+            <ComboBox x:Name="GroupComboBox" 
+                     PlaceholderText="{x:Bind SelectedGroup, Mode=OneWay}"
+                     Width="150"
+                     SelectionChanged="GroupSelected" />
+            <StackPanel Margin="10 0 0 0" Orientation="Horizontal" >
+                <TextBlock Text="SubGroup:" Margin="0 0 10 0" VerticalAlignment="Center"/>
+                <RadioButton Content="Full" Tag="0" Checked="SubgroupChecked" IsChecked="{x:Bind IsSubgroup0}"/>
+                <RadioButton Content="First" Tag="1" Checked="SubgroupChecked" IsChecked="{x:Bind IsSubgroup1}"/>
+                <RadioButton Content="Second" Tag="2" Checked="SubgroupChecked" IsChecked="{x:Bind IsSubgroup2}"/>
+                <ProgressRing IsActive="{x:Bind IsBusy, Mode=OneWay}" Foreground="White" />
             </StackPanel>
+        </StackPanel>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" 
+                      VerticalAlignment="Stretch"
+                      Grid.Row="1">
             <GridView x:Name="ScheduleGridView" Width="2000" SelectionMode="None">
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="vm:DayScheduleVM">
@@ -32,6 +39,7 @@
                     </DataTemplate>
                 </GridView.ItemTemplate>
             </GridView>
-        </StackPanel>
-    </ScrollViewer>
+        </ScrollViewer>
+    </Grid>
+    
 </Page>
