@@ -20,26 +20,8 @@ using System.ComponentModel;
 
 namespace BsuirScheduleUniversal
 {
-    public sealed partial class DayScheduleControl : UserControl, INotifyPropertyChanged
+    public sealed partial class DayScheduleControl : UserControl
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-
-        private DaySchedule _daySchedule;
-        public DaySchedule DaySchedule
-        {
-            get => _daySchedule;
-            set
-            {
-                _daySchedule = value;
-                NotifyPropertyChanged();
-            }
-        }
-
         public DayScheduleControl()
         {
             this.InitializeComponent();

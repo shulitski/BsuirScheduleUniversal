@@ -17,6 +17,21 @@ namespace BsuirScheduleUniversal.ViewModels
             _obj = obj;
         }
 
+        public PairVM()
+        {
+            Pair pair = new Pair();
+            pair.auditory = new List<string> { "210-4" };
+            pair.startLessonTime = "08:00";
+            pair.endLessonTime = "09:35";
+            pair.subject = "ОСиСП";
+            pair.numSubgroup = 2;
+            pair.employee = new List<Employee> { new Employee { lastName = "Конь", firstName = "Игорь", middleName = "Генадиевич" } };
+            pair.lessonType = "ЛР";
+            pair.weekNumber = new List<int> { 1, 3 };
+
+            _obj = pair;
+        }
+
         public string startLessonTime => _obj.startLessonTime;
         public string endLessonTime => _obj.endLessonTime;
         public string subject => _obj.subject;
@@ -84,5 +99,7 @@ namespace BsuirScheduleUniversal.ViewModels
         public Brush WeekBrush2 => GetWeekBrush(2);
         public Brush WeekBrush3 => GetWeekBrush(3);
         public Brush WeekBrush4 => GetWeekBrush(4);
+
+        public PairVM This => this;
     }
 }

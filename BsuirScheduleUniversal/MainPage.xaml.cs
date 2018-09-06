@@ -23,41 +23,6 @@ using Windows.UI;
 
 namespace BsuirScheduleUniversal
 {
-    public class DaySchedule
-    {
-        private readonly DateTime _date;
-        public List<PairVM> Pairs { get; set; } = new List<PairVM>();
-        public string WeekDayName => $"{_date.ToShortDateString()} {_date.DayOfWeek.ToString()}";
-        public Brush Background => _date.Date == DateTime.Today.Date
-            ? (Brush)new SolidColorBrush(Color.FromArgb(32, 0, 255, 255))
-            //? (Brush)new SolidColorBrush(Colors.Red) 
-            : (Brush)new SolidColorBrush(Colors.Transparent);
-
-        public Brush Border => _date.Date == DateTime.Today.Date
-            ? (Brush)new SolidColorBrush(Color.FromArgb(255, 0, 255, 255))
-            //? (Brush)new SolidColorBrush(Colors.Red) 
-            : (Brush)new SolidColorBrush(Colors.Transparent);
-
-        private DaySchedule(DateTime date)
-        {
-            _date = date;
-        }
-
-        public static async Task<DaySchedule> Create(string group, DateTime date, int subGroup)
-        {
-            DaySchedule result = new DaySchedule(date);
-            var pairs = await Loader.LoadPairs(group, date, subGroup);
-            if (pairs == null) return result;
-
-            foreach (var pair in pairs)
-            {
-                result.Pairs.Add(new PairVM(pair));
-            }
-
-            return result;
-        }
-    }
-
     public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
         private static ApplicationDataContainer LocalSettings => ApplicationData.Current.LocalSettings;
@@ -122,7 +87,7 @@ namespace BsuirScheduleUniversal
             {
                 ScheduleGridView.ItemsSource = null;
 
-                List<DaySchedule> schedule = new List<DaySchedule>();
+                List<DayScheduleVM> schedule = new List<DayScheduleVM>();
                 DateTime day = DateTime.Today;
                 int currentDayIndex = 0;
                 for (int i = 0; i < 7; i++)
@@ -134,7 +99,7 @@ namespace BsuirScheduleUniversal
                 }
                 for (int i = 0; i < 30; i++)
                 {
-                    schedule.Add(await DaySchedule.Create(SelectedGroup, day.AddDays(i), CheckedSubgroup));
+                    schedule.Add(await DayScheduleVM.Create(SelectedGroup, day.AddDays(i), CheckedSubgroup));
                 }
 
                 ScheduleGridView.ItemsSource = schedule;

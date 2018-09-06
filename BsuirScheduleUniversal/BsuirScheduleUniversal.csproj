@@ -115,6 +115,7 @@
       <DependentUpon>PairControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\DayScheduleVM.cs" />
     <Compile Include="ViewModels\PairVM.cs" />
   </ItemGroup>
   <ItemGroup>

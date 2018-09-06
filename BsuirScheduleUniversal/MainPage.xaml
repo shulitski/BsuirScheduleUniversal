@@ -27,8 +27,8 @@
             </StackPanel>
             <GridView x:Name="ScheduleGridView" Width="2000" SelectionMode="None">
                 <GridView.ItemTemplate>
-                    <DataTemplate x:DataType="local:DaySchedule">
-                        <local:DayScheduleControl DaySchedule="{x:Bind}" />
+                    <DataTemplate x:DataType="vm:DayScheduleVM">
+                        <local:DayScheduleControl DataContext="{x:Bind}" />
                     </DataTemplate>
                 </GridView.ItemTemplate>
             </GridView>

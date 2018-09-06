@@ -15,30 +15,14 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using BsuirScheduleUniversal.ViewModels;
+using Windows.ApplicationModel;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace BsuirScheduleUniversal
 {
-    public sealed partial class PairControl : UserControl, INotifyPropertyChanged
+    public sealed partial class PairControl : UserControl
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-
-        private PairVM _pair;
-        public PairVM Pair {
-            get => _pair;
-            set
-            {
-                _pair = value;
-                NotifyPropertyChanged();
-            }
-        }
-
         public PairControl()
         {
             this.InitializeComponent();
