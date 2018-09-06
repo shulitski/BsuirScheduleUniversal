@@ -25,7 +25,7 @@
                     <ProgressRing IsActive="{x:Bind IsBusy, Mode=OneWay}" Foreground="White" />
                 </StackPanel>
             </StackPanel>
-            <GridView x:Name="ScheduleGridView" Width="2000">
+            <GridView x:Name="ScheduleGridView" Width="2000" SelectionMode="None">
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="local:DaySchedule">
                         <local:DayScheduleControl DaySchedule="{x:Bind}" />

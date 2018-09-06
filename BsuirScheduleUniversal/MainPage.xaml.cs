@@ -19,6 +19,7 @@ using Windows.UI.Xaml.Navigation;
 using BsuirScheduleLib.BsuirApi.Schedule;
 using BsuirScheduleUniversal.ViewModels;
 using System.Runtime.CompilerServices;
+using Windows.UI;
 
 namespace BsuirScheduleUniversal
 {
@@ -27,6 +28,15 @@ namespace BsuirScheduleUniversal
         private readonly DateTime _date;
         public List<PairVM> Pairs { get; set; } = new List<PairVM>();
         public string WeekDayName => $"{_date.ToShortDateString()} {_date.DayOfWeek.ToString()}";
+        public Brush Background => _date.Date == DateTime.Today.Date
+            ? (Brush)new SolidColorBrush(Color.FromArgb(32, 0, 255, 255))
+            //? (Brush)new SolidColorBrush(Colors.Red) 
+            : (Brush)new SolidColorBrush(Colors.Transparent);
+
+        public Brush Border => _date.Date == DateTime.Today.Date
+            ? (Brush)new SolidColorBrush(Color.FromArgb(255, 0, 255, 255))
+            //? (Brush)new SolidColorBrush(Colors.Red) 
+            : (Brush)new SolidColorBrush(Colors.Transparent);
 
         private DaySchedule(DateTime date)
         {

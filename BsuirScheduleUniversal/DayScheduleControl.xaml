@@ -12,7 +12,13 @@
 
     <StackPanel>
         <TextBlock TextAlignment="Center" Text="{x:Bind DaySchedule.WeekDayName, Mode=OneWay}" />
-        <ListView x:Name="PairsListView" Width ="275"  Height="300" ItemsSource="{x:Bind DaySchedule.Pairs, Mode=OneWay}">
+        <ListView x:Name="PairsListView" 
+                  Width ="275" 
+                  Height="300" 
+                  BorderBrush="{x:Bind DaySchedule.Border, Mode=OneWay}"
+                  BorderThickness="1"
+                  Background="{x:Bind DaySchedule.Background, Mode=OneWay}"
+                  ItemsSource="{x:Bind DaySchedule.Pairs, Mode=OneWay}">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="viewModels:PairVM">
                     <local:PairControl Pair="{x:Bind}" />
