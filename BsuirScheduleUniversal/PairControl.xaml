@@ -15,7 +15,7 @@
             <TextBlock Text="{x:Bind Pair.startLessonTime, Mode=OneWay}" Foreground="Teal" FontSize="15"/>
             <TextBlock Text="{x:Bind Pair.endLessonTime, Mode=OneWay}" Foreground="Teal" FontSize="15"/>
         </StackPanel>
-        <StackPanel Margin="5 0 0 0" Orientation="Vertical">
+        <StackPanel Margin="5 0 0 0" Orientation="Vertical" ToolTipService.ToolTip="{x:Bind Pair.WeekTooltip, Mode=OneWay}">
             <Rectangle Width="5" Height="10" Stroke="Aqua" Fill="{x:Bind Pair.WeekBrush1, Mode=OneWay}" />
             <Rectangle Width="5" Height="10" Stroke="Aqua" Fill="{x:Bind Pair.WeekBrush2, Mode=OneWay}" />
             <Rectangle Width="5" Height="10" Stroke="Aqua" Fill="{x:Bind Pair.WeekBrush3, Mode=OneWay}" />

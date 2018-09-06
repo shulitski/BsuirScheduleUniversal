@@ -54,6 +54,25 @@ namespace BsuirScheduleUniversal.ViewModels
             }
         }
 
+        public string WeekTooltip
+        {
+            get
+            {
+                string result = "";
+                foreach( var week in _obj.weekNumber)
+                {
+                    if (week == 0) continue;
+                    if (result != "")
+                        result += ", ";
+                    result += week;
+                }
+                if(_obj.weekNumber.Count == 1)
+                    result += " week";
+                else
+                    result += " weeks";
+                return result;
+            }
+        }
         private Brush GetWeekBrush(int week)
         {
             return _obj.weekNumber.Contains(week)
