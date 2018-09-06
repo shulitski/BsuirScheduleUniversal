@@ -43,11 +43,11 @@ namespace BsuirScheduleUniversal.ViewModels
                 switch (_obj.lessonType)
                 {
                     case "ЛК":
-                        return new SolidColorBrush(Colors.White);
+                        return new SolidColorBrush(Colors.LightGray);
                     case "ПЗ":
-                        return new SolidColorBrush(Colors.Yellow);
+                        return new SolidColorBrush(Colors.Gold);
                     case "ЛР":
-                        return new SolidColorBrush(Colors.Red);
+                        return new SolidColorBrush(Colors.Brown);
                     default:
                         return new SolidColorBrush(Colors.White);
                 }
