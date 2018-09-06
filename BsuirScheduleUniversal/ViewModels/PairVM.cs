@@ -69,6 +69,9 @@ namespace BsuirScheduleUniversal.ViewModels
             }
         }
 
+        public Brush AuditoryColor =>
+            (Auditory.Last() == '4') ? new SolidColorBrush(Colors.Transparent) : new SolidColorBrush(Colors.Brown);
+
         public string WeekTooltip
         {
             get

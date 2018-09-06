@@ -28,7 +28,9 @@
                 <TextBlock Text="{Binding subject}" Foreground="Teal" FontSize="15"/>
                 <TextBlock Text="{Binding LessonType}" Foreground="{Binding LessonTypeBrush}" FontSize="15"/>
             </StackPanel>
-            <TextBlock Text="{Binding Auditory}" Foreground="Teal" FontSize="15"/>
+            <Border BorderThickness="1" BorderBrush="{Binding AuditoryColor}">
+                <TextBlock Text="{Binding Auditory}" Foreground="Teal"  FontSize="15"/>
+            </Border>
         </StackPanel>
         <StackPanel controls:DockPanel.Dock="Right" Margin="0 0 25 0" Orientation="Vertical">
             <TextBlock HorizontalAlignment="Right" Text="{Binding NumSubgroup}" Foreground="Teal" FontSize="12"/>
