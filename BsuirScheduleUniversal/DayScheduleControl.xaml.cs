@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using BsuirScheduleUniversal.ViewModels;
 using System.ComponentModel;
+using Windows.ApplicationModel;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -22,9 +23,19 @@ namespace BsuirScheduleUniversal
 {
     public sealed partial class DayScheduleControl : UserControl
     {
+        bool _contextIgnored = false;
         public DayScheduleControl()
         {
             this.InitializeComponent();
+        }
+
+        private void UserControl_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
+        {
+            if (!_contextIgnored)
+            {
+                DataContext = null;
+                _contextIgnored = true;
+            }
         }
     }
 }
