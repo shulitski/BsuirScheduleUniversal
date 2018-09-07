@@ -108,6 +108,9 @@
     <Compile Include="Chart.xaml.cs">
       <DependentUpon>Chart.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ChartColumnControl.xaml.cs">
+      <DependentUpon>ChartColumnControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DayScheduleControl.xaml.cs">
       <DependentUpon>DayScheduleControl.xaml</DependentUpon>
     </Compile>
@@ -190,6 +193,10 @@
     <Page Include="Chart.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChartColumnControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="DayScheduleControl.xaml">
       <SubType>Designer</SubType>
