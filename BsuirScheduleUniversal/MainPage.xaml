@@ -28,6 +28,7 @@
                 <RadioButton Content="Second" Tag="2" Checked="SubgroupChecked" IsChecked="{x:Bind IsSubgroup2}"/>
                 <ProgressRing IsActive="{x:Bind IsBusy, Mode=OneWay}" Foreground="White" />
             </StackPanel>
+            <Button Click="ChartButton_OnClick">Chart</Button>
         </StackPanel>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" 
                       VerticalAlignment="Stretch"

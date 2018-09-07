@@ -64,7 +64,7 @@ namespace BsuirScheduleUniversal.ViewModels
                     case "ЛР":
                         return new SolidColorBrush(Colors.Brown);
                     default:
-                        return new SolidColorBrush(Colors.White);
+                        return new SolidColorBrush(Colors.LightGray);
                 }
             }
         }

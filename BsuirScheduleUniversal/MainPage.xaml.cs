@@ -151,5 +151,10 @@ namespace BsuirScheduleUniversal
                 SelectedGroup = GroupComboBox.SelectedItem?.ToString();
             }
         }
+
+        private void ChartButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(Chart));
+        }
     }
 }
