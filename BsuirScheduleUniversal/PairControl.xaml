@@ -8,9 +8,12 @@
     mc:Ignorable="d"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:vm="using:BsuirScheduleUniversal.ViewModels"
-    d:DataContext="{Binding Source={d:DesignInstance Type=vm:PairVM, IsDesignTimeCreatable=True}}"
     d:DesignHeight="300"
     d:DesignWidth="400">
+
+    <UserControl.DataContext>
+        <vm:PairVM />
+    </UserControl.DataContext>
 
     <controls:DockPanel Width="275">
         <StackPanel controls:DockPanel.Dock="Left" Orientation="Vertical">
