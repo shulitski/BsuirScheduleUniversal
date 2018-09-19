@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Windows.Storage;
 using Newtonsoft.Json;
 using BsuirScheduleLib.BsuirApi;
+using System.Globalization;
 
 namespace BsuirScheduleLib.BsuirApi.Schedule
 {
@@ -71,6 +72,22 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
             return schedule?.schedule?.FindAll(pair => 
                 Utils.FilterSubgroup(subgroup, pair.numSubgroup)
                 && pair.weekNumber.Contains(day.BsuirWeekNum()));
+        }
+
+        public static async Task<List<Pair>> LoadPairsFull(string group, DayOfWeek day, int subgroup)
+        {
+            var response = await Load(group);
+            var schedule = response.schedules.Find(s => Utils.StringToDayOfWeek(s.weekday) == day);
+            var pairs = schedule?.schedule?.FindAll(pair => Utils.FilterSubgroup(subgroup, pair.numSubgroup));
+            pairs?.Sort((p1, p2) =>
+            {
+                DateTime d1 = DateTime.ParseExact(p1.startLessonTime, "HH:mm", CultureInfo.InvariantCulture);
+                DateTime d2 = DateTime.ParseExact(p2.startLessonTime, "HH:mm", CultureInfo.InvariantCulture);
+                if (d1 < d2) return -1;
+                if (d1 > d2) return 1;
+                return 0;
+            });
+            return pairs;
         }
     }
 }
