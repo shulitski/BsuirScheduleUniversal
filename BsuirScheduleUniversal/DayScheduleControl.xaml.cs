@@ -23,6 +23,8 @@ namespace BsuirScheduleUniversal
 {
     public sealed partial class DayScheduleControl : UserControl
     {
+        public event Action<PairVM> PairSelected;
+
         bool _contextIgnored = false;
         public DayScheduleControl()
         {
@@ -36,6 +38,11 @@ namespace BsuirScheduleUniversal
                 DataContext = null;
                 _contextIgnored = true;
             }
+        }
+
+        private void PairsListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            PairSelected?.Invoke((PairVM)e.AddedItems[0]);
         }
     }
 }

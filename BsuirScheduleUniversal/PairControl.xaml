@@ -29,15 +29,18 @@
         <StackPanel controls:DockPanel.Dock="Left" Margin="5 0 0 0" Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding subject}" Foreground="Teal" FontSize="15"/>
-                <TextBlock Text="{Binding LessonType}" Foreground="{Binding LessonTypeBrush}" FontSize="15"/>
+                <TextBlock Text="{Binding ShortLessonType}" Foreground="{Binding LessonTypeBrush}" FontSize="15"/>
             </StackPanel>
             <Border BorderThickness="1" BorderBrush="{Binding AuditoryColor}">
                 <TextBlock Text="{Binding Auditory}" Foreground="Teal"  FontSize="15"/>
             </Border>
         </StackPanel>
         <StackPanel controls:DockPanel.Dock="Right" Margin="0 0 25 0" Orientation="Vertical">
-            <TextBlock HorizontalAlignment="Right" Text="{Binding NumSubgroup}" Foreground="Teal" FontSize="12"/>
-            <TextBlock HorizontalAlignment="Right" Text="{Binding EmployeeName}" Foreground="Teal" FontSize="12"/>
+            <TextBlock HorizontalAlignment="Right" Foreground="Teal" FontSize="12" Visibility="{Binding SubgroupVisibility}">
+                <Run Text="subgroup "/>
+                <Run Text="{Binding NumSubgroup}"/>
+            </TextBlock>
+            <TextBlock HorizontalAlignment="Right" Text="{Binding EmployeeShortName}" Foreground="Teal" FontSize="12"/>
         </StackPanel>
     </controls:DockPanel>
 </UserControl>

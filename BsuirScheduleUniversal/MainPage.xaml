@@ -28,7 +28,7 @@
                 <RadioButton Content="Second" Tag="2" Checked="SubgroupChecked" IsChecked="{x:Bind IsSubgroup2}"/>
                 <ProgressRing IsActive="{x:Bind IsBusy, Mode=OneWay}" Foreground="White" />
             </StackPanel>
-            <Button Click="ChartButton_OnClick">Chart</Button>
+            <!--Button Click="ChartButton_OnClick">Chart</-->
         </StackPanel>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" 
                       VerticalAlignment="Stretch"
@@ -36,7 +36,7 @@
             <GridView x:Name="ScheduleGridView" Width="2000" SelectionMode="None">
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="vm:DayScheduleVM">
-                        <local:DayScheduleControl DataContext="{x:Bind}" />
+                        <local:DayScheduleControl DataContext="{x:Bind}" PairSelected="DayScheduleControl_OnPairSelected" />
                     </DataTemplate>
                 </GridView.ItemTemplate>
             </GridView>

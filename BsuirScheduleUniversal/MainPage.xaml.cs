@@ -156,5 +156,10 @@ namespace BsuirScheduleUniversal
         {
             this.Frame.Navigate(typeof(Chart));
         }
+
+        private void DayScheduleControl_OnPairSelected(PairVM obj)
+        {
+            this.Frame.Navigate(typeof(PairPage), obj);
+        }
     }
 }
