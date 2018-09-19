@@ -20,7 +20,7 @@
     <PackageCertificateKeyFile>BsuirScheduleUniversal_StoreKey.pfx</PackageCertificateKeyFile>
     <PackageCertificateThumbprint>30529D16E1295B2CC1B2F0C55AD1ABEE9EE3D8B4</PackageCertificateThumbprint>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
     <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
@@ -120,6 +120,9 @@
     <Compile Include="PairControl.xaml.cs">
       <DependentUpon>PairControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PairPage.xaml.cs">
+      <DependentUpon>PairPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\ChartDayScheduleVM.cs" />
     <Compile Include="ViewModels\ChartPairVM.cs" />
@@ -209,6 +212,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="PairControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PairPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

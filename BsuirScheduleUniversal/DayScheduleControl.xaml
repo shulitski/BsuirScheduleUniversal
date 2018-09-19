@@ -19,11 +19,12 @@
         <TextBlock TextAlignment="Center" Text="{Binding WeekDayName}" />
         <ListView x:Name="PairsListView" 
                   Width ="275" 
-                  Height="300" 
+                  Height="{Binding ControlHeight}" 
                   BorderBrush="{Binding Border}"
                   BorderThickness="1"
                   Background="{Binding Background}"
-                  ItemsSource="{Binding Pairs}">
+                  ItemsSource="{Binding Pairs}"
+                  SelectionChanged="PairsListView_OnSelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="vm:PairVM">
                     <local:PairControl DataContext="{Binding}"/>

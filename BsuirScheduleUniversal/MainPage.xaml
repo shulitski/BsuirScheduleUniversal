@@ -21,25 +21,45 @@
                      PlaceholderText="{x:Bind SelectedGroup, Mode=OneWay}"
                      Width="150"
                      SelectionChanged="GroupSelected" />
-            <StackPanel Margin="10 0 0 0" Orientation="Horizontal" >
+            <StackPanel Margin="10 0 0 0" Orientation="Horizontal"  >
                 <TextBlock Text="SubGroup:" Margin="0 0 10 0" VerticalAlignment="Center"/>
-                <RadioButton Content="Full" Tag="0" Checked="SubgroupChecked" IsChecked="{x:Bind IsSubgroup0}"/>
+                <RadioButton Content="All" Tag="0" Checked="SubgroupChecked" IsChecked="{x:Bind IsSubgroup0}"/>
                 <RadioButton Content="First" Tag="1" Checked="SubgroupChecked" IsChecked="{x:Bind IsSubgroup1}"/>
                 <RadioButton Content="Second" Tag="2" Checked="SubgroupChecked" IsChecked="{x:Bind IsSubgroup2}"/>
-                <ProgressRing IsActive="{x:Bind IsBusy, Mode=OneWay}" Foreground="White" />
             </StackPanel>
+            <CheckBox Content="Full schedule" IsChecked="{x:Bind IsFullSchedule, Mode=TwoWay}"/>
+            <ProgressRing IsActive="{x:Bind IsBusy, Mode=OneWay}" Foreground="White" />
             <!--Button Click="ChartButton_OnClick">Chart</-->
         </StackPanel>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" 
                       VerticalAlignment="Stretch"
                       Grid.Row="1">
-            <GridView x:Name="ScheduleGridView" Width="2000" SelectionMode="None">
-                <GridView.ItemTemplate>
-                    <DataTemplate x:DataType="vm:DayScheduleVM">
-                        <local:DayScheduleControl DataContext="{x:Bind}" />
-                    </DataTemplate>
-                </GridView.ItemTemplate>
-            </GridView>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="35"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="35"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Button HorizontalAlignment="Stretch" 
+                        Grid.Row="0" 
+                        Click="LoadUpClick" 
+                        Visibility="{x:Bind LoadMoreVisibility, Mode=OneWay}">
+                    Load more
+                </Button>
+                <GridView DataContext="{x:Bind Schedule, Mode=TwoWay}" ItemsSource="{Binding Mode=TwoWay}" x:Name="ScheduleGridView" Width="2000" SelectionMode="None" Grid.Row="1">
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:DayScheduleVM">
+                            <local:DayScheduleControl DataContext="{Binding Mode=OneWay}" PairSelected="DayScheduleControl_OnPairSelected" />
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+                <Button HorizontalAlignment="Stretch" 
+                        Grid.Row="2" 
+                        Click="LoadDownClick" 
+                        Visibility="{x:Bind LoadMoreVisibility, Mode=OneWay}">
+                    Load more
+                </Button>
+            </Grid>
         </ScrollViewer>
     </Grid>
     

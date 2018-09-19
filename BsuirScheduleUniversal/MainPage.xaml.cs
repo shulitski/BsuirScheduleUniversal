@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -33,8 +34,13 @@ namespace BsuirScheduleUniversal
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-
+        private bool _selectionLocked = false;
         private bool _isBusy = false;
+        private DateTime? _beginDate;
+        private DateTime? _endDate;
+        public ObservableCollection<DayScheduleVM> Schedule;
+        public Visibility LoadMoreVisibility => (Schedule != null && Schedule.Count > 0 && !IsFullSchedule) ? Visibility.Visible : Visibility.Collapsed;
+
         public bool IsBusy
         {
             get => _isBusy;
@@ -42,6 +48,16 @@ namespace BsuirScheduleUniversal
             {
                 _isBusy = value;
                 NotifyPropertyChanged();
+            }
+        }
+
+        public bool IsFullSchedule
+        {
+            get => (LocalSettings.Values["IsFullSchedule"] as bool?) ?? false;
+            set
+            {
+                LocalSettings.Values["IsFullSchedule"] = (bool?)value;
+                Reload();
             }
         }
 
@@ -58,6 +74,8 @@ namespace BsuirScheduleUniversal
         private bool IsSubgroup0 => CheckedSubgroup == 0;
         private bool IsSubgroup1 => CheckedSubgroup == 1;
         private bool IsSubgroup2 => CheckedSubgroup == 2;
+        private int _currentDayIndex;
+
 
         public string SelectedGroup
         {
@@ -77,6 +95,40 @@ namespace BsuirScheduleUniversal
             FillGroupCombobox();
         }
 
+        private async Task<ObservableCollection<DayScheduleVM>> LoadSchedule()
+        {
+            var schedule = new ObservableCollection<DayScheduleVM>();
+            DateTime day = DateTime.Today;
+            for (int i = 0; i < 7; i++)
+            {
+                day = day.AddDays(-1);
+                _currentDayIndex++;
+                if (day.DayOfWeek == DayOfWeek.Monday)
+                    break;
+            }
+
+            _beginDate = day;
+
+            for (; day < _beginDate.Value.AddDays(30) || day.DayOfWeek != DayOfWeek.Monday; day = day.AddDays(1))
+            {
+                schedule.Add(await DayScheduleVM.Create(SelectedGroup, day, CheckedSubgroup));
+            }
+
+            _endDate = day.AddDays(-1);
+            return schedule;
+        }
+
+        private async Task<ObservableCollection<DayScheduleVM>> LoadFullSchedule()
+        {
+            var schedule = new ObservableCollection<DayScheduleVM>();
+            
+            for (var day = DayOfWeek.Monday; day != DayOfWeek.Sunday; day = (DayOfWeek)((int)(day + 1) % 7))
+            {
+                schedule.Add(await DayScheduleVM.CreateFull(SelectedGroup, day, CheckedSubgroup));
+            }
+            return schedule;
+        }
+
         private async void Reload()
         {
             if (ScheduleGridView == null) return;
@@ -85,31 +137,21 @@ namespace BsuirScheduleUniversal
 
             try
             {
-                ScheduleGridView.ItemsSource = null;
+                Schedule = null;
 
-                List<DayScheduleVM> schedule = new List<DayScheduleVM>();
-                DateTime day = DateTime.Today;
-                int currentDayIndex = 0;
-                for (int i = 0; i < 7; i++)
-                {
-                    day = day.AddDays(-1);
-                    currentDayIndex++;
-                    if (day.DayOfWeek == DayOfWeek.Monday)
-                        break;
-                }
-                for (int i = 0; i < 30; i++)
-                {
-                    schedule.Add(await DayScheduleVM.Create(SelectedGroup, day.AddDays(i), CheckedSubgroup));
-                }
-
-                ScheduleGridView.ItemsSource = schedule;
-                ScheduleGridView.SelectedIndex = currentDayIndex;
+                if(IsFullSchedule)
+                    Schedule = await LoadFullSchedule();
+                else
+                    Schedule = await LoadSchedule();
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 // ignored
             }
 
+            FillGroupCombobox();
+            NotifyPropertyChanged("Schedule");
+            NotifyPropertyChanged("LoadMoreVisibility");
             IsBusy = false;
         }
 
@@ -120,6 +162,7 @@ namespace BsuirScheduleUniversal
 
         private void FillGroupCombobox()
         {
+            _selectionLocked = true;
             GroupComboBox.Items.Clear();
             if (Loader.CachedGroupsArray != null)
             {
@@ -131,10 +174,14 @@ namespace BsuirScheduleUniversal
                 }
             }
             GroupComboBox.Items.Add("Load group...");
+            _selectionLocked = false;
         }
 
         private async void GroupSelected(object sender, SelectionChangedEventArgs e)
         {
+            if (_selectionLocked)
+                return;
+
             if(string.IsNullOrEmpty(GroupComboBox.SelectedItem?.ToString())) return;
 
             if (GroupComboBox.SelectedItem?.ToString() == "Load group...")
@@ -144,7 +191,6 @@ namespace BsuirScheduleUniversal
                 if (dlg.Value == null) return;
 
                 SelectedGroup = dlg.Value;
-                FillGroupCombobox();
             }
             else
             {
@@ -155,6 +201,31 @@ namespace BsuirScheduleUniversal
         private void ChartButton_OnClick(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(Chart));
+        }
+
+        private void DayScheduleControl_OnPairSelected(PairVM obj)
+        {
+            this.Frame.Navigate(typeof(PairPage), obj);
+        }
+
+        private async void LoadUpClick(object sender, RoutedEventArgs e)
+        {
+            for (int i = 0; i < 7; i++)
+            {
+                _beginDate = _beginDate.Value.AddDays(-1);
+                Schedule.Insert(0, await DayScheduleVM.Create(SelectedGroup, _beginDate.Value, CheckedSubgroup));
+            }
+            NotifyPropertyChanged("Schedule");
+        }
+
+        private async void LoadDownClick(object sender, RoutedEventArgs e)
+        {
+            for (int i = 0; i < 7; i++)
+            {
+                _endDate = _endDate.Value.AddDays(1);
+                Schedule.Add(await DayScheduleVM.Create(SelectedGroup, _endDate.Value, CheckedSubgroup));
+            }
+            NotifyPropertyChanged("Schedule");
         }
     }
 }

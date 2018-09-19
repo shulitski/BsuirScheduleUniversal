@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 using BsuirScheduleLib.BsuirApi.Schedule;
 
@@ -28,7 +29,7 @@ namespace BsuirScheduleUniversal.ViewModels
                 numSubgroup = 2,
                 employee = new List<Employee>
                 {
-                    new Employee {lastName = "Конь", firstName = "Игорь", middleName = "Генадиевич"}
+                    new Employee {lastName = "Конь", firstName = "Игорь", middleName = "Генадиевич", rank = "Профессор"}
                 },
                 lessonType = "ЛР",
                 weekNumber = new List<int> {1, 3}
@@ -42,10 +43,11 @@ namespace BsuirScheduleUniversal.ViewModels
         public string subject => _obj.subject;
 
         public string Auditory => _obj.auditory.Aggregate("", (s, s1) => s + s1);
+        public string PhotoLink => _obj.employee.FirstOrDefault()?.photoLink; 
 
-
-        public string NumSubgroup => (_obj.numSubgroup == 0) ? "" : $"подгр. {_obj.numSubgroup}";
-        public string EmployeeName
+        public Visibility SubgroupVisibility => (_obj.numSubgroup == 0) ? Visibility.Collapsed : Visibility.Visible;
+        public string NumSubgroup => (_obj.numSubgroup == 0) ? "All" : _obj.numSubgroup.ToString();
+        public string EmployeeShortName
         {
             get
             {
@@ -55,7 +57,14 @@ namespace BsuirScheduleUniversal.ViewModels
 
             }
         }
-        public string LessonType => $" ({_obj.lessonType})";
+
+        public string EmployeeRank => _obj.employee.FirstOrDefault()?.rank;
+        public string EmployeeFirstName => _obj.employee.FirstOrDefault()?.firstName;
+        public string EmployeeMiddleName => _obj.employee.FirstOrDefault()?.middleName;
+        public string EmployeeLastName => _obj.employee.FirstOrDefault()?.lastName;
+
+        public string ShortLessonType => $" ({_obj.lessonType})";
+        public string LessonType => _obj.lessonType;
         public Brush LessonTypeBrush
         {
             get
