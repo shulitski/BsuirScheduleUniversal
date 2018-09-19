@@ -21,13 +21,14 @@
                      PlaceholderText="{x:Bind SelectedGroup, Mode=OneWay}"
                      Width="150"
                      SelectionChanged="GroupSelected" />
-            <StackPanel Margin="10 0 0 0" Orientation="Horizontal" >
+            <StackPanel Margin="10 0 0 0" Orientation="Horizontal"  >
                 <TextBlock Text="SubGroup:" Margin="0 0 10 0" VerticalAlignment="Center"/>
-                <RadioButton Content="Full" Tag="0" Checked="SubgroupChecked" IsChecked="{x:Bind IsSubgroup0}"/>
+                <RadioButton Content="All" Tag="0" Checked="SubgroupChecked" IsChecked="{x:Bind IsSubgroup0}"/>
                 <RadioButton Content="First" Tag="1" Checked="SubgroupChecked" IsChecked="{x:Bind IsSubgroup1}"/>
                 <RadioButton Content="Second" Tag="2" Checked="SubgroupChecked" IsChecked="{x:Bind IsSubgroup2}"/>
-                <ProgressRing IsActive="{x:Bind IsBusy, Mode=OneWay}" Foreground="White" />
             </StackPanel>
+            <CheckBox Content="Full schedule" IsChecked="{x:Bind IsFullSchedule, Mode=TwoWay}"/>
+            <ProgressRing IsActive="{x:Bind IsBusy, Mode=OneWay}" Foreground="White" />
             <!--Button Click="ChartButton_OnClick">Chart</-->
         </StackPanel>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" 
