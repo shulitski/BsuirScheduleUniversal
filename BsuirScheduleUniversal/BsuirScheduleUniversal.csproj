@@ -20,7 +20,7 @@
     <PackageCertificateKeyFile>BsuirScheduleUniversal_StoreKey.pfx</PackageCertificateKeyFile>
     <PackageCertificateThumbprint>30529D16E1295B2CC1B2F0C55AD1ABEE9EE3D8B4</PackageCertificateThumbprint>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
     <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
