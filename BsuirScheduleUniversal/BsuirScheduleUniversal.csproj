@@ -124,6 +124,8 @@
       <DependentUpon>PairPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\ChartDayScheduleVM.cs" />
+    <Compile Include="ViewModels\ChartPairVM.cs" />
     <Compile Include="ViewModels\DayScheduleVM.cs" />
     <Compile Include="ViewModels\PairVM.cs" />
   </ItemGroup>
