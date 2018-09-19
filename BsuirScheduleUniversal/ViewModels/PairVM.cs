@@ -38,7 +38,7 @@ namespace BsuirScheduleUniversal.ViewModels
         public string subject => _obj.subject;
 
         public string Auditory => _obj.auditory.Aggregate("", (s, s1) => s + s1);
-
+        public string PhotoLink => _obj.employee.FirstOrDefault()?.photoLink; 
 
         public Visibility SubgroupVisibility => (_obj.numSubgroup == 0) ? Visibility.Collapsed : Visibility.Visible;
         public string NumSubgroup => (_obj.numSubgroup == 0) ? "All" : _obj.numSubgroup.ToString();
