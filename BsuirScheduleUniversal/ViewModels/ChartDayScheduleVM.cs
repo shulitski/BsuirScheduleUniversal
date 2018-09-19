@@ -63,5 +63,8 @@ namespace BsuirScheduleUniversal.ViewModels
         public ChartPairVM Pair6 => GetPair(6);
         public ChartPairVM Pair7 => GetPair(7);
         public ChartPairVM Pair8 => GetPair(8);
+
+        public string WeekDayName => _date.DayOfWeek.ToString();
+        public string Date => $"{_date:dd.MM.yyyy}";
     }
 }

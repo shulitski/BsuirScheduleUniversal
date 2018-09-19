@@ -55,7 +55,7 @@ namespace BsuirScheduleUniversal
                     if (day.DayOfWeek == DayOfWeek.Monday)
                         break;
                 }
-                for (int i = 0; i < 30; i++)
+                for (int i = 0; i < 14; i++)
                 {
                     schedule.Add(await ChartDayScheduleVM.Create(SelectedGroup, day.AddDays(i), CheckedSubgroup));
                 }
@@ -68,6 +68,18 @@ namespace BsuirScheduleUniversal
                 // ignored
             }
 
+        }
+
+        private void BackClick(object sender, RoutedEventArgs e)
+        {
+            On_BackRequested();
+        }
+
+        private bool On_BackRequested()
+        {
+            if (!this.Frame.CanGoBack) return false;
+            this.Frame.GoBack();
+            return true;
         }
     }
 }

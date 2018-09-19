@@ -45,12 +45,9 @@ namespace BsuirScheduleUniversal
 
         private bool On_BackRequested()
         {
-            if (this.Frame.CanGoBack)
-            {
-                this.Frame.GoBack();
-                return true;
-            }
-            return false;
+            if (!this.Frame.CanGoBack) return false;
+            this.Frame.GoBack();
+            return true;
         }
     }
 }

@@ -52,5 +52,6 @@ namespace BsuirScheduleUniversal.ViewModels
                 }
             }
         }
+        public string Subject => _obj.subject;
     }
 }

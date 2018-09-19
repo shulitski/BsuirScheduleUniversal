@@ -10,12 +10,103 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <GridView Height="1000" x:Name="ChartDridView">
-            <GridView.ItemTemplate>
-                <DataTemplate x:DataType="vm:DayScheduleVM">
-                    <local:ChartColumnControl DataContext="{Binding}" />
-                </DataTemplate>
-            </GridView.ItemTemplate>
-        </GridView>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Button Style="{StaticResource NavigationBackButtonNormalStyle}" Height="35" Grid.Row="0" Click="BackClick"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid VerticalAlignment="Top" Height="920" Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Rectangle Stroke="Teal" />
+                    <TextBlock Text="8" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Rectangle Stroke="Teal" />
+                    <TextBlock Text="9" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Rectangle Stroke="Teal" />
+                    <TextBlock Text="10" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+                <Grid Grid.Row="3">
+                    <Rectangle Stroke="Teal" />
+                    <TextBlock Text="11" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+                <Grid Grid.Row="4">
+                    <Rectangle Stroke="Teal" />
+                    <TextBlock Text="12" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+                <Grid Grid.Row="5">
+                    <Rectangle Stroke="Teal" />
+                    <TextBlock Text="13" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+                <Grid Grid.Row="6">
+                    <Rectangle Stroke="Teal" />
+                    <TextBlock Text="14" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+                <Grid Grid.Row="7">
+                    <Rectangle Stroke="Teal" />
+                    <TextBlock Text="15" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+                <Grid Grid.Row="8">
+                    <Rectangle Stroke="Teal" />
+                    <TextBlock Text="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+                <Grid Grid.Row="9">
+                    <Rectangle Stroke="Teal" />
+                    <TextBlock Text="17" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+                <Grid Grid.Row="10">
+                    <Rectangle Stroke="Teal" />
+                    <TextBlock Text="18" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+                <Grid Grid.Row="11">
+                    <Rectangle Stroke="Teal" />
+                    <TextBlock Text="19" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+                <Grid Grid.Row="12">
+                    <Rectangle Stroke="Teal" />
+                    <TextBlock Text="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+                <Grid Grid.Row="13">
+                    <Rectangle Stroke="Teal" />
+                    <TextBlock Text="21" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+            </Grid>
+            <GridView Height="1010" x:Name="ChartDridView" Grid.Column="1">
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsWrapGrid Orientation="Vertical" />
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+
+                <GridView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:DayScheduleVM">
+                        <local:ChartColumnControl DataContext="{Binding}" />
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+            </GridView>
+        </Grid>
     </Grid>
 </Page>

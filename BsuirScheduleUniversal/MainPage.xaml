@@ -29,7 +29,7 @@
             </StackPanel>
             <CheckBox Content="Full schedule" IsChecked="{x:Bind IsFullSchedule, Mode=TwoWay}"/>
             <ProgressRing IsActive="{x:Bind IsBusy, Mode=OneWay}" Foreground="White" />
-            <!--Button Click="ChartButton_OnClick">Chart</-->
+            <Button Click="ChartButton_OnClick">Chart</Button>
         </StackPanel>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" 
                       VerticalAlignment="Stretch"
