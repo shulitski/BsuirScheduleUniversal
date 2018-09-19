@@ -33,7 +33,7 @@ namespace BsuirScheduleUniversal
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-
+        private bool _selectionLocked = false;
         private bool _isBusy = false;
         public bool IsBusy
         {
@@ -110,6 +110,7 @@ namespace BsuirScheduleUniversal
                 // ignored
             }
 
+            FillGroupCombobox();
             IsBusy = false;
         }
 
@@ -120,6 +121,7 @@ namespace BsuirScheduleUniversal
 
         private void FillGroupCombobox()
         {
+            _selectionLocked = true;
             GroupComboBox.Items.Clear();
             if (Loader.CachedGroupsArray != null)
             {
@@ -131,10 +133,14 @@ namespace BsuirScheduleUniversal
                 }
             }
             GroupComboBox.Items.Add("Load group...");
+            _selectionLocked = false;
         }
 
         private async void GroupSelected(object sender, SelectionChangedEventArgs e)
         {
+            if (_selectionLocked)
+                return;
+
             if(string.IsNullOrEmpty(GroupComboBox.SelectedItem?.ToString())) return;
 
             if (GroupComboBox.SelectedItem?.ToString() == "Load group...")
@@ -144,7 +150,6 @@ namespace BsuirScheduleUniversal
                 if (dlg.Value == null) return;
 
                 SelectedGroup = dlg.Value;
-                FillGroupCombobox();
             }
             else
             {
