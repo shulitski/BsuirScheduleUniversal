@@ -88,7 +88,7 @@ namespace BsuirScheduleUniversal
                 ScheduleGridView.ItemsSource = null;
 
                 List<DayScheduleVM> schedule = new List<DayScheduleVM>();
-                DateTime day = DateTime.Today;
+                DateTime day = DateTime.Today.AddDays(-7);
                 int currentDayIndex = 0;
                 for (int i = 0; i < 7; i++)
                 {
@@ -97,9 +97,11 @@ namespace BsuirScheduleUniversal
                     if (day.DayOfWeek == DayOfWeek.Monday)
                         break;
                 }
-                for (int i = 0; i < 30; i++)
+                for (DateTime scheduleDay = day; 
+                    scheduleDay < day.AddDays(40) || scheduleDay.DayOfWeek != DayOfWeek.Sunday;
+                    scheduleDay = scheduleDay.AddDays(1))
                 {
-                    schedule.Add(await DayScheduleVM.Create(SelectedGroup, day.AddDays(i), CheckedSubgroup));
+                    schedule.Add(await DayScheduleVM.Create(SelectedGroup, scheduleDay, CheckedSubgroup));
                 }
 
                 ScheduleGridView.ItemsSource = schedule;
