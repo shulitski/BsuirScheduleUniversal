@@ -19,7 +19,7 @@
         <TextBlock TextAlignment="Center" Text="{Binding WeekDayName}" />
         <ListView x:Name="PairsListView" 
                   Width ="275" 
-                  Height="300" 
+                  Height="{Binding ControlHeight}" 
                   BorderBrush="{Binding Border}"
                   BorderThickness="1"
                   Background="{Binding Background}"
