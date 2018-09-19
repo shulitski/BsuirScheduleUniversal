@@ -19,15 +19,20 @@ namespace BsuirScheduleUniversal.ViewModels
 
         public PairVM()
         {
-            Pair pair = new Pair();
-            pair.auditory = new List<string> { "210-4" };
-            pair.startLessonTime = "08:00";
-            pair.endLessonTime = "09:35";
-            pair.subject = "ОСиСП";
-            pair.numSubgroup = 2;
-            pair.employee = new List<Employee> { new Employee { lastName = "Конь", firstName = "Игорь", middleName = "Генадиевич" } };
-            pair.lessonType = "ЛР";
-            pair.weekNumber = new List<int> { 1, 3 };
+            Pair pair = new Pair
+            {
+                auditory = new List<string> {"210-4"},
+                startLessonTime = "08:00",
+                endLessonTime = "09:35",
+                subject = "ОСиСП",
+                numSubgroup = 2,
+                employee = new List<Employee>
+                {
+                    new Employee {lastName = "Конь", firstName = "Игорь", middleName = "Генадиевич"}
+                },
+                lessonType = "ЛР",
+                weekNumber = new List<int> {1, 3}
+            };
 
             _obj = pair;
         }

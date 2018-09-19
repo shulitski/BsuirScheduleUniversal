@@ -7,11 +7,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    d:DesignHeight="300"
+    d:DesignHeight="1080"
     d:DesignWidth="400">
 
     <UserControl.DataContext>
-        <vm:DayScheduleVM />
+        <vm:ChartDayScheduleVM />
     </UserControl.DataContext>
     <Grid Width="100" Height="1000">
         <Grid.RowDefinitions>
@@ -23,15 +23,17 @@
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
+            <RowDefinition Height="20" />
         </Grid.RowDefinitions>
 
-        <Rectangle Stroke="Aqua" StrokeThickness="1" Fill="{Binding Pair8.LessonTypeBrush}" Grid.Row="0"/>
-        <Rectangle Stroke="Aqua" StrokeThickness="1" Fill="{Binding Pair7.LessonTypeBrush}" Grid.Row="1"/>
-        <Rectangle Stroke="Aqua" StrokeThickness="1" Fill="{Binding Pair6.LessonTypeBrush}" Grid.Row="2"/>
-        <Rectangle Stroke="Aqua" StrokeThickness="1" Fill="{Binding Pair5.LessonTypeBrush}" Grid.Row="3"/>
-        <Rectangle Stroke="Aqua" StrokeThickness="1" Fill="{Binding Pair4.LessonTypeBrush}" Grid.Row="4"/>
-        <Rectangle Stroke="Aqua" StrokeThickness="1" Fill="{Binding Pair3.LessonTypeBrush}" Grid.Row="5"/>
-        <Rectangle Stroke="Aqua" StrokeThickness="1" Fill="{Binding Pair2.LessonTypeBrush}" Grid.Row="6"/>
-        <Rectangle Stroke="Aqua" StrokeThickness="1" Fill="{Binding Pair1.LessonTypeBrush}" Grid.Row="7"/>
+        <Rectangle Stroke="#20FFFFFF" StrokeThickness="1" Fill="{Binding Pair8.LessonTypeBrush}" Grid.Row="0"/>
+        <Rectangle Stroke="#20FFFFFF" StrokeThickness="1" Fill="{Binding Pair7.LessonTypeBrush}" Grid.Row="1"/>
+        <Rectangle Stroke="#20FFFFFF" StrokeThickness="1" Fill="{Binding Pair6.LessonTypeBrush}" Grid.Row="2"/>
+        <Rectangle Stroke="#20FFFFFF" StrokeThickness="1" Fill="{Binding Pair5.LessonTypeBrush}" Grid.Row="3"/>
+        <Rectangle Stroke="#20FFFFFF" StrokeThickness="1" Fill="{Binding Pair4.LessonTypeBrush}" Grid.Row="4"/>
+        <Rectangle Stroke="#20FFFFFF" StrokeThickness="1" Fill="{Binding Pair3.LessonTypeBrush}" Grid.Row="5"/>
+        <Rectangle Stroke="#20FFFFFF" StrokeThickness="1" Fill="{Binding Pair2.LessonTypeBrush}" Grid.Row="6"/>
+        <Rectangle Stroke="#20FFFFFF" StrokeThickness="1" Fill="{Binding Pair1.LessonTypeBrush}" Grid.Row="7"/>
+        <TextBlock Text="{Binding WeekDayName}" FontSize="12" HorizontalAlignment="Center" Grid.Row="8" />
     </Grid>
 </UserControl>

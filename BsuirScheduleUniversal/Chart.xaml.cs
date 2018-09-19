@@ -45,7 +45,7 @@ namespace BsuirScheduleUniversal
             {
                 ChartDridView.ItemsSource = null;
 
-                List<DayScheduleVM> schedule = new List<DayScheduleVM>();
+                var schedule = new List<ChartDayScheduleVM>();
                 DateTime day = DateTime.Today;
                 int currentDayIndex = 0;
                 for (int i = 0; i < 7; i++)
@@ -57,7 +57,7 @@ namespace BsuirScheduleUniversal
                 }
                 for (int i = 0; i < 30; i++)
                 {
-                    schedule.Add(await DayScheduleVM.Create(SelectedGroup, day.AddDays(i), CheckedSubgroup));
+                    schedule.Add(await ChartDayScheduleVM.Create(SelectedGroup, day.AddDays(i), CheckedSubgroup));
                 }
 
                 ChartDridView.ItemsSource = schedule;
