@@ -34,13 +34,32 @@
         <ScrollViewer HorizontalScrollBarVisibility="Auto" 
                       VerticalAlignment="Stretch"
                       Grid.Row="1">
-            <GridView x:Name="ScheduleGridView" Width="2000" SelectionMode="None">
-                <GridView.ItemTemplate>
-                    <DataTemplate x:DataType="vm:DayScheduleVM">
-                        <local:DayScheduleControl DataContext="{x:Bind}" PairSelected="DayScheduleControl_OnPairSelected" />
-                    </DataTemplate>
-                </GridView.ItemTemplate>
-            </GridView>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="35"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="35"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Button HorizontalAlignment="Stretch" 
+                        Grid.Row="0" 
+                        Click="LoadUpClick" 
+                        Visibility="{x:Bind LoadMoreVisibility, Mode=OneWay}">
+                    Load more
+                </Button>
+                <GridView DataContext="{x:Bind Schedule, Mode=TwoWay}" ItemsSource="{Binding Mode=TwoWay}" x:Name="ScheduleGridView" Width="2000" SelectionMode="None" Grid.Row="1">
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:DayScheduleVM">
+                            <local:DayScheduleControl DataContext="{Binding Mode=OneWay}" PairSelected="DayScheduleControl_OnPairSelected" />
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+                <Button HorizontalAlignment="Stretch" 
+                        Grid.Row="2" 
+                        Click="LoadDownClick" 
+                        Visibility="{x:Bind LoadMoreVisibility, Mode=OneWay}">
+                    Load more
+                </Button>
+            </Grid>
         </ScrollViewer>
     </Grid>
     
