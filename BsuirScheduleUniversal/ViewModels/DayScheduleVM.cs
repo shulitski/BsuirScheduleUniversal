@@ -1,6 +1,7 @@
 ﻿using BsuirScheduleLib.BsuirApi.Schedule;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace BsuirScheduleUniversal.ViewModels
         private readonly DayOfWeek? _dayOfWeek;
         private bool IsToday => (_date == null) ? (_dayOfWeek.Value == DateTime.Today.DayOfWeek) : (_date.Value.Date == DateTime.Today.Date);
         public List<PairVM> Pairs { get; set; } = new List<PairVM>();
-        public string WeekDayName => (_date == null) ? _dayOfWeek.ToString() : $"{_date.Value.ToShortDateString()} {_date.Value.DayOfWeek.ToString()}";
+        public string WeekDayName => (_date == null) ? _dayOfWeek.ToString() : $"{_date.Value:dd.MM.yyyy} {_date.Value.DayOfWeek.ToString()}";
         public Brush Background => IsToday
             ? (Brush)new SolidColorBrush(Color.FromArgb(32, 0, 255, 255))
             : (Brush)new SolidColorBrush(Colors.Transparent);
