@@ -20,7 +20,7 @@
                 <ColumnDefinition Width="20" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Grid VerticalAlignment="Top" Height="920" Grid.Column="0">
+            <Grid VerticalAlignment="Top" Height="{x:Bind HoursHeight}" Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>

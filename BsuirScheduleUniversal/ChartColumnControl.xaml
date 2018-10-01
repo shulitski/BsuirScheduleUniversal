@@ -13,7 +13,7 @@
     <UserControl.DataContext>
         <vm:ChartDayScheduleVM />
     </UserControl.DataContext>
-    <Grid Width="100" Height="960">
+    <Grid Width="100" Height="{Binding Height}">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="40" />
@@ -54,7 +54,7 @@
             <Rectangle Stroke="#3000FFFF" StrokeThickness="1" Fill="{Binding Pair8.LessonTypeBrush}" Grid.Row="14"/>
             <TextBlock Text="{Binding Pair8.Subject}" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="14" />
         </Grid>
-        <StackPanel Orientation="Vertical" Grid.Row="1" >
+        <StackPanel Orientation="Vertical" Grid.Row="1" Height="{Binding DateHeight}" >
             <TextBlock Text="{Binding WeekDayName}" FontSize="12" HorizontalAlignment="Center" />
             <TextBlock Text="{Binding Date}" FontSize="12" HorizontalAlignment="Center" />
         </StackPanel>

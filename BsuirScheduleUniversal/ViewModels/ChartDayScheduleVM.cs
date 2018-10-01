@@ -55,6 +55,8 @@ namespace BsuirScheduleUniversal.ViewModels
             return Pairs.Find(p => p.startLessonTime == startTime);
         }
 
+        
+
         public ChartPairVM Pair1 => GetPair(1);
         public ChartPairVM Pair2 => GetPair(2);
         public ChartPairVM Pair3 => GetPair(3);
@@ -66,5 +68,7 @@ namespace BsuirScheduleUniversal.ViewModels
 
         public string WeekDayName => _date.DayOfWeek.ToString();
         public string Date => $"{_date:dd.MM.yyyy}";
+        public double Height => Utils.GetSize().Height - Constants.TopBarHeight;
+        public double DateHeight => Constants.ChartDateHeight;
     }
 }

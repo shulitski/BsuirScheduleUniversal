@@ -27,8 +27,9 @@ namespace BsuirScheduleUniversal
         private static ApplicationDataContainer LocalSettings => ApplicationData.Current.LocalSettings;
 
         private int CheckedSubgroup => (LocalSettings.Values["checkedSubgroup"] as int?) ?? 0;
-
         public string SelectedGroup => LocalSettings.Values["selectedGroup"] as string;
+
+        public double HoursHeight => Utils.GetSize().Height - Constants.TopBarHeight - Constants.ChartDateHeight;
 
         public Chart()
         {
