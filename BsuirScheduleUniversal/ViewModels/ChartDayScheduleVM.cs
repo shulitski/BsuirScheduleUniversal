@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI;
+using Windows.UI.Xaml.Media;
 using BsuirScheduleLib.BsuirApi.Schedule;
 
 namespace BsuirScheduleUniversal.ViewModels
@@ -70,5 +72,14 @@ namespace BsuirScheduleUniversal.ViewModels
         public string Date => $"{_date:dd.MM.yyyy}";
         public double Height => Utils.GetSize().Height - Constants.TopBarHeight;
         public double DateHeight => Constants.ChartDateHeight;
+
+        private bool IsToday => _date.Date == DateTime.Today.Date;
+        public Brush Background => IsToday
+            ? (Brush)new SolidColorBrush(Color.FromArgb(32, 0, 255, 255))
+            : (Brush)new SolidColorBrush(Colors.Transparent);
+
+        public Brush Border => IsToday
+            ? (Brush)new SolidColorBrush(Color.FromArgb(255, 0, 255, 255))
+            : (Brush)new SolidColorBrush(Colors.Transparent);
     }
 }

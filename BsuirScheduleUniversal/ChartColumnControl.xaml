@@ -18,7 +18,7 @@
             <RowDefinition/>
             <RowDefinition Height="40" />
         </Grid.RowDefinitions>
-        <Grid>
+        <Grid Background="{Binding Background}" BorderBrush="{Binding Border}" BorderThickness="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="19*" />
                 <RowDefinition Height="2*" />

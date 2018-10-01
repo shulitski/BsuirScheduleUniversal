@@ -14,7 +14,6 @@ namespace BsuirScheduleUniversal
         public static Size GetSize()
         {
             var bounds = ApplicationView.GetForCurrentView().VisibleBounds;
-            var scaleFactor = DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
             return new Size(bounds.Width, bounds.Height);
         }
     }
