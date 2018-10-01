@@ -106,6 +106,8 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BsuirApi\LastUpdate\LastUpdate.cs" />
+    <Compile Include="BsuirApi\LastUpdate\Loader.cs" />
     <Compile Include="BsuirApi\Schedule\Employee.cs" />
     <Compile Include="BsuirApi\Schedule\Loader.cs" />
     <Compile Include="BsuirApi\Schedule\Pair.cs" />

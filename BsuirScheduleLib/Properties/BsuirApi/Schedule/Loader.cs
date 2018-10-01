@@ -8,6 +8,7 @@ using Windows.Storage;
 using Newtonsoft.Json;
 using BsuirScheduleLib.BsuirApi;
 using System.Globalization;
+using System.Threading;
 
 namespace BsuirScheduleLib.BsuirApi.Schedule
 {
@@ -16,6 +17,9 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
         private static readonly Dictionary<string, ScheduleResponse> cache = new Dictionary<string, ScheduleResponse>();
         private static StorageFolder LocalFolder => ApplicationData.Current.LocalFolder;
         private static ApplicationDataContainer LocalSettings => ApplicationData.Current.LocalSettings;
+        private static Action<ScheduleResponse> _onScheluleUpdated;
+        private static Timer _updateTimer;
+        private static bool _loading;
 
         private static string CachedGroups
         {
@@ -23,26 +27,44 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
             set => LocalSettings.Values["cachedGroups"] = value;
         }
 
-        public static string[] CachedGroupsArray => CachedGroups?.Split(',');
+        public static IEnumerable<string> CachedGroupsArray => CachedGroups?.Split(',');
 
         private static bool IsGroupCached(string group)
         {
             return CachedGroupsArray?.Contains(group) ?? false;
         }
 
+        private static async Task SaveToFile(string json, string group)
+        {
+            string fileName = $"group_schedule_{group}.json";
+            StorageFile sampleFile = await LocalFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+            await FileIO.WriteTextAsync(sampleFile, json);
+            if (string.IsNullOrEmpty(CachedGroups) || !CachedGroups.Contains(group))
+            {
+                if (string.IsNullOrEmpty(CachedGroups))
+                    CachedGroups += $"{group}";
+                else
+                    CachedGroups += $",{group}";
+            }
+        }
+
         private static void Save(string group, ScheduleResponse scheduleResponse)
         {
+            if (cache.ContainsKey(group))
+                cache.Remove(group);
             cache.Add(group, scheduleResponse);
         }
 
-        public static async Task<ScheduleResponse> Load(string group)
+        public static async Task<ScheduleResponse> Load(string group, bool allowCache = true)
         {
-            if (cache.ContainsKey(group)) return cache[group];
+            if (allowCache && cache.ContainsKey(group))
+                return cache[group];
 
+            _loading = true;
             string json;
             string fileName = $"group_schedule_{group}.json";
             
-            if(IsGroupCached(group))
+            if(allowCache && IsGroupCached(group))
             {
                 StorageFile file = await LocalFolder.GetFileAsync(fileName);
                 json = await FileIO.ReadTextAsync(file);
@@ -52,16 +74,12 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
                 //Schedule not found
                 string url = $"https://students.bsuir.by/api/v1/studentGroup/schedule?studentGroup={group}";
                 json = await Utils.LoadString(url);
-                StorageFile sampleFile = await LocalFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
-                await FileIO.WriteTextAsync(sampleFile, json);
-                if(string.IsNullOrEmpty(CachedGroups))
-                    CachedGroups += $"{group}";
-                else
-                    CachedGroups += $",{group}";
+                await SaveToFile(json, group);
             }
 
             ScheduleResponse scheduleResponse = JsonConvert.DeserializeObject<ScheduleResponse>(json);
             Save(group, scheduleResponse);
+            _loading = false;
             return scheduleResponse;
         }
 
@@ -88,6 +106,37 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
                 return 0;
             });
             return pairs;
+        }
+
+        private static async void CheckScheduleUpdate(object state)
+        {
+            try
+            {
+                if(_loading)
+                    return;
+                var group = (string) state;
+                var lastUpdate = await LastUpdate.Loader.Load(group);
+                var schedule = await Load(group);
+                var updateDate =
+                    DateTime.ParseExact(lastUpdate.lastUpdateDate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                var scheduleDate = DateTime.ParseExact(schedule.todayDate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
+                if (updateDate <= scheduleDate) return;
+
+                var newSchedule = await Load(group, false);
+                _onScheluleUpdated(newSchedule);
+            }
+            catch (Exception)
+            {
+                //Ignore
+            }
+            
+        }
+
+        public static void AddScheduleUpdateListener(Action<ScheduleResponse> onScheduleUpdated, string group)
+        {
+            _onScheluleUpdated = onScheduleUpdated;
+            _updateTimer?.Change(Timeout.Infinite, Timeout.Infinite);
+            _updateTimer = new Timer(CheckScheduleUpdate, group, 10000, 10000);
         }
     }
 }

@@ -20,7 +20,10 @@ using Windows.UI.Xaml.Navigation;
 using BsuirScheduleLib.BsuirApi.Schedule;
 using BsuirScheduleUniversal.ViewModels;
 using System.Runtime.CompilerServices;
+using Windows.ApplicationModel.Core;
 using Windows.UI;
+using Windows.UI.Core;
+using Windows.UI.Popups;
 
 namespace BsuirScheduleUniversal
 {
@@ -129,6 +132,18 @@ namespace BsuirScheduleUniversal
             return schedule;
         }
 
+        private async void OnScheduleUpdated(ScheduleResponse schedule)
+        {
+            await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                async () =>
+                {
+                    Reload();
+                    var dialog = new MessageDialog("Schedule updated");
+                    await dialog.ShowAsync();
+                }
+            );
+        }
+
         private async void Reload()
         {
             if (ScheduleGridView == null) return;
@@ -143,6 +158,7 @@ namespace BsuirScheduleUniversal
                     Schedule = await LoadFullSchedule();
                 else
                     Schedule = await LoadSchedule();
+                Loader.AddScheduleUpdateListener(OnScheduleUpdated, SelectedGroup);
             }
             catch (Exception e)
             {
