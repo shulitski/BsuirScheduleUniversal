@@ -79,7 +79,7 @@
                 <Run Text="Rank: "/>
                 <Run Text="{Binding EmployeeRank}"/>
             </TextBlock>
-            <Image>
+            <Image Width="100" Height="100">
                 <Image.Source>
                     <BitmapImage UriSource="{Binding PhotoLink}" />
                 </Image.Source>
