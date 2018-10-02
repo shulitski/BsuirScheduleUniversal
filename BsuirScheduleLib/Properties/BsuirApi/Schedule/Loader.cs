@@ -79,6 +79,9 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
 
             ScheduleResponse scheduleResponse = JsonConvert.DeserializeObject<ScheduleResponse>(json);
             Save(group, scheduleResponse);
+
+            var scheduleDate = DateTime.ParseExact(scheduleResponse.todayDate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
+            Utils.SetWeekCalculationBase(scheduleDate, scheduleResponse.currentWeekNumber);
             _loading = false;
             return scheduleResponse;
         }
