@@ -32,7 +32,8 @@ namespace BsuirScheduleUniversal.ViewModels
                     new Employee {lastName = "Конь", firstName = "Игорь", middleName = "Генадиевич", rank = "Профессор"}
                 },
                 lessonType = "ЛР",
-                weekNumber = new List<int> {1, 3}
+                weekNumber = new List<int> {1, 3},
+                note = "Записка"
             };
 
             _obj = pair;
@@ -117,6 +118,7 @@ namespace BsuirScheduleUniversal.ViewModels
         public Brush WeekBrush3 => GetWeekBrush(3);
         public Brush WeekBrush4 => GetWeekBrush(4);
 
-        public PairVM This => this;
+        public string NoteIndicator => (string.IsNullOrEmpty(_obj.note)) ? "" : "!";
+        public string Note => _obj.note;
     }
 }

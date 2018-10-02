@@ -28,6 +28,7 @@
         </StackPanel>
         <StackPanel controls:DockPanel.Dock="Left" Margin="5 0 0 0" Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding NoteIndicator}" Foreground="Red" FontSize="15"/>
                 <TextBlock Text="{Binding subject}" Foreground="Teal" FontSize="15"/>
                 <TextBlock Text="{Binding ShortLessonType}" Foreground="{Binding LessonTypeBrush}" FontSize="15"/>
             </StackPanel>
