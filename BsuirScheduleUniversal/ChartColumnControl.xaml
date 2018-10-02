@@ -7,7 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    d:DesignHeight="1080"
+    d:DesignHeight="1200"
     d:DesignWidth="400">
 
     <UserControl.DataContext>
@@ -16,7 +16,7 @@
     <Grid Width="100" Height="{Binding Height}">
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="40" />
+            <RowDefinition Height="50" />
         </Grid.RowDefinitions>
         <Grid Background="{Binding Background}" BorderBrush="{Binding Border}" BorderThickness="1">
             <Grid.RowDefinitions>
@@ -54,7 +54,7 @@
             <Rectangle Stroke="#3000FFFF" StrokeThickness="1" Fill="{Binding Pair8.LessonTypeBrush}" Grid.Row="14"/>
             <TextBlock Text="{Binding Pair8.Subject}" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="14" />
         </Grid>
-        <StackPanel Orientation="Vertical" Grid.Row="1" Height="{Binding DateHeight}" >
+        <StackPanel Orientation="Vertical" Grid.Row="1" Height="50" >
             <TextBlock Text="{Binding WeekDayName}" FontSize="12" HorizontalAlignment="Center" />
             <TextBlock Text="{Binding Date}" FontSize="12" HorizontalAlignment="Center" />
         </StackPanel>

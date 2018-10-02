@@ -9,6 +9,6 @@ namespace BsuirScheduleUniversal
     internal static class Constants
     {
         public const double TopBarHeight = 35;
-        public const double ChartDateHeight = 40;
+        public const double ChartDateHeight = 50;
     }
 }

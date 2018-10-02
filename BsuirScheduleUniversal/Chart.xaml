@@ -94,7 +94,7 @@
                     <TextBlock Text="21" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 </Grid>
             </Grid>
-            <GridView Height="1010" x:Name="ChartDridView" Grid.Column="1">
+            <GridView x:Name="ChartDridView" Grid.Column="1">
                 <GridView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <ItemsWrapGrid Orientation="Vertical" />
