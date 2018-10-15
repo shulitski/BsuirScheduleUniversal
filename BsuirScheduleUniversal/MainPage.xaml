@@ -20,7 +20,11 @@
             <ComboBox x:Name="GroupComboBox" 
                      PlaceholderText="{x:Bind SelectedGroup, Mode=OneWay}"
                      Width="150"
-                     SelectionChanged="GroupSelected" />
+                     SelectionChanged="GroupSelected" >
+                <FlyoutBase.AttachedFlyout>
+                    <MenuFlyout/>
+                </FlyoutBase.AttachedFlyout>
+            </ComboBox>
             <StackPanel Margin="10 0 0 0" Orientation="Horizontal"  >
                 <TextBlock Text="SubGroup:" Margin="0 0 10 0" VerticalAlignment="Center"/>
                 <RadioButton Content="All" Tag="0" Checked="SubgroupChecked" IsChecked="{x:Bind IsSubgroup0}"/>
@@ -49,7 +53,7 @@
                 <GridView DataContext="{x:Bind Schedule, Mode=TwoWay}" ItemsSource="{Binding Mode=TwoWay}" x:Name="ScheduleGridView" Width="2000" SelectionMode="None" Grid.Row="1">
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="vm:DayScheduleVM">
-                            <local:DayScheduleControl DataContext="{Binding Mode=OneWay}" PairSelected="DayScheduleControl_OnPairSelected" PairDeleted="Reload" />
+                            <local:DayScheduleControl DataContext="{Binding Mode=OneWay}" PairSelected="DayScheduleControl_OnPairSelected" PairDeleted="DayScheduleControl_PairDeleted" />
                         </DataTemplate>
                     </GridView.ItemTemplate>
                 </GridView>

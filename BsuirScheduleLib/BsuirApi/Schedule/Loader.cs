@@ -63,21 +63,26 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
             _loading = true;
             string json;
             string fileName = $"group_schedule_{group}.json";
-            
-            if(allowCache && IsGroupCached(group))
+
+            ScheduleResponse scheduleResponse = null;
+            if (allowCache && IsGroupCached(group))
             {
                 StorageFile file = await LocalFolder.GetFileAsync(fileName);
                 json = await FileIO.ReadTextAsync(file);
+                scheduleResponse = JsonConvert.DeserializeObject<ScheduleResponse>(json);
             }
             else
             {
                 //Schedule not found
                 string url = $"https://students.bsuir.by/api/v1/studentGroup/schedule?studentGroup={group}";
                 json = await Utils.LoadString(url);
-                await SaveToFile(json, group);
+                scheduleResponse = JsonConvert.DeserializeObject<ScheduleResponse>(json);
+                if(scheduleResponse != null)
+                    await SaveToFile(json, group);
             }
+            if (scheduleResponse == null)
+                throw new ScheduleLoadingException();
 
-            ScheduleResponse scheduleResponse = JsonConvert.DeserializeObject<ScheduleResponse>(json);
             Save(group, scheduleResponse);
 
             var scheduleDate = DateTime.ParseExact(scheduleResponse.todayDate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
@@ -89,6 +94,7 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
         public static async Task<List<Pair>> LoadPairs(string group, DateTime day, int subgroup)
         {
             var response = await Load(group);
+
             var schedule = response.schedules.Find(s => Utils.StringToDayOfWeek(s.weekday) == day.DayOfWeek);
             return schedule?.schedule?.FindAll(pair => 
                 Utils.FilterSubgroup(subgroup, pair.numSubgroup)
@@ -98,6 +104,7 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
         public static async Task<List<Pair>> LoadPairsFull(string group, DayOfWeek day, int subgroup)
         {
             var response = await Load(group);
+
             var schedule = response.schedules.Find(s => Utils.StringToDayOfWeek(s.weekday) == day);
             var pairs = schedule?.schedule?.FindAll(pair => Utils.FilterSubgroup(subgroup, pair.numSubgroup));
             pairs?.Sort((p1, p2) =>

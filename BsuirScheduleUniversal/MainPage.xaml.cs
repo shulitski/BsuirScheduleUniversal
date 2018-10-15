@@ -79,16 +79,22 @@ namespace BsuirScheduleUniversal
         private bool IsSubgroup2 => CheckedSubgroup == 2;
         private int _currentDayIndex;
 
-
+        private string _selectedGroup = null;
         public string SelectedGroup
         {
-            get => LocalSettings.Values["selectedGroup"] as string;
+            get => _selectedGroup ?? (LocalSettings.Values["selectedGroup"] as string);
             set
             {
-                LocalSettings.Values["selectedGroup"] = value;
-                NotifyPropertyChanged();
-                Reload();
+                SetSelectedGroup(value);
             }
+        }
+
+        private async void SetSelectedGroup(string value)
+        {
+            _selectedGroup = value;
+            NotifyPropertyChanged();
+            await Reload();
+            LocalSettings.Values["selectedGroup"] = _selectedGroup;
         }
 
         public MainPage()
@@ -144,7 +150,7 @@ namespace BsuirScheduleUniversal
             );
         }
 
-        private async void Reload()
+        private async Task Reload()
         {
             if (ScheduleGridView == null) return;
             if (SelectedGroup == null) return;
@@ -159,6 +165,12 @@ namespace BsuirScheduleUniversal
                 else
                     Schedule = await LoadSchedule();
                 Loader.AddScheduleUpdateListener(OnScheduleUpdated, SelectedGroup);
+            }
+            catch (ScheduleLoadingException e)
+            {
+                if(LocalSettings.Values.ContainsKey("selectedGroup"))
+                    SelectedGroup = LocalSettings.Values["selectedGroup"] as string; // Revert selected group
+                return;
             }
             catch (Exception e)
             {
@@ -242,6 +254,11 @@ namespace BsuirScheduleUniversal
                 Schedule.Add(await DayScheduleVM.Create(SelectedGroup, _endDate.Value, CheckedSubgroup));
             }
             NotifyPropertyChanged("Schedule");
+        }
+
+        private void DayScheduleControl_PairDeleted()
+        {
+            Reload();
         }
     }
 }

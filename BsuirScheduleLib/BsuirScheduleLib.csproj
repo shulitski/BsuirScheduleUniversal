@@ -112,6 +112,7 @@
     <Compile Include="BsuirApi\Schedule\Loader.cs" />
     <Compile Include="BsuirApi\Schedule\Pair.cs" />
     <Compile Include="BsuirApi\Schedule\Schedule.cs" />
+    <Compile Include="BsuirApi\Schedule\ScheduleLoadingException.cs" />
     <Compile Include="BsuirApi\Schedule\ScheduleResponse.cs" />
     <Compile Include="BsuirApi\Utils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
