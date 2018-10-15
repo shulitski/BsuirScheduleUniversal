@@ -20,10 +20,7 @@
             <ComboBox x:Name="GroupComboBox" 
                      PlaceholderText="{x:Bind SelectedGroup, Mode=OneWay}"
                      Width="150"
-                     SelectionChanged="GroupSelected" >
-                <FlyoutBase.AttachedFlyout>
-                    <MenuFlyout/>
-                </FlyoutBase.AttachedFlyout>
+                     SelectionChanged="GroupSelected">
             </ComboBox>
             <StackPanel Margin="10 0 0 0" Orientation="Horizontal"  >
                 <TextBlock Text="SubGroup:" Margin="0 0 10 0" VerticalAlignment="Center"/>

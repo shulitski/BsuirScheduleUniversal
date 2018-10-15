@@ -196,7 +196,21 @@ namespace BsuirScheduleUniversal
             {
                 foreach (var group in Loader.CachedGroupsArray)
                 {
-                    GroupComboBox.Items.Add(group);
+                    var panel = new StackPanel();
+                    panel.Orientation = Orientation.Horizontal;
+
+                    var button = new Button();
+                    button.Content = "X";
+                    button.Margin = new Thickness(0, 0, 10, 0);
+                    button.Click += (s, e) => DeleteGroup(group);
+                    panel.Children.Add(button);
+
+                    var name = new TextBlock();
+                    name.Text = group;
+                    panel.Children.Add(name);
+
+
+                    GroupComboBox.Items.Add(panel);
                     if (group == SelectedGroup)
                         GroupComboBox.SelectedItem = group;
                 }
@@ -224,6 +238,12 @@ namespace BsuirScheduleUniversal
             {
                 SelectedGroup = GroupComboBox.SelectedItem?.ToString();
             }
+        }
+
+        private void DeleteGroup(string group)
+        {
+            Loader.DeleteGroup(group);
+            FillGroupCombobox();
         }
 
         private void ChartButton_OnClick(object sender, RoutedEventArgs e)

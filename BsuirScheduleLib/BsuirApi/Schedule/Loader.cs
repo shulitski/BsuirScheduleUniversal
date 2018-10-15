@@ -190,5 +190,29 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
                 await SaveToFile(json, group);
             }
         }
+
+        public static async void DeleteGroup(string group)
+        {
+            cache.Remove(group);
+
+            if (IsGroupCached(group))
+            {
+                string fileName = $"group_schedule_{group}.json";
+                StorageFile file = await LocalFolder.GetFileAsync(fileName);
+                await file.DeleteAsync();
+                string newCachedGroups = "";
+                foreach(var cachedGroup in CachedGroupsArray)
+                {
+                    if(cachedGroup != group)
+                    {
+                        if(newCachedGroups == "")
+                            newCachedGroups += cachedGroup;
+                        else
+                            newCachedGroups += "," + cachedGroup;
+                    }
+                }
+                CachedGroups = newCachedGroups;
+            }
+        }
     }
 }
