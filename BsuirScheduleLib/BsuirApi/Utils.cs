@@ -12,6 +12,9 @@ namespace BsuirScheduleLib.BsuirApi
 {
     internal static class Utils
     {
+        private static DateTime _weekCalculationBaseDate = new DateTime(2018, 10, 1);
+        private static int _weekCalculationBaseWeek = 2;
+
         internal static async Task<string> LoadString(string url)
         {
             using (var client = new System.Net.Http.HttpClient())
@@ -37,10 +40,37 @@ namespace BsuirScheduleLib.BsuirApi
             }
         }
 
+        internal static void SetWeekCalculationBase(DateTime date, int weekNum)
+        {
+            var tempDate = date;
+            while (tempDate.DayOfWeek != DayOfWeek.Monday)
+            {
+                tempDate = tempDate.AddDays(-1);
+            }
+
+            _weekCalculationBaseDate = tempDate.Date;
+            _weekCalculationBaseWeek = weekNum;
+        }
+
         internal static int BsuirWeekNum(this DateTime date)
         {
-            const int magic = 2;
-            return (date.DayOfYear / 7 + magic) % 4 + 1;
+            if (date >= _weekCalculationBaseDate)
+            {
+                var interval = date - _weekCalculationBaseDate;
+                return (interval.Days / 7 + (_weekCalculationBaseWeek - 1)) % 4 + 1;
+            }
+            else
+            {
+                var interval = _weekCalculationBaseDate - date;
+                var weekInterval = interval.Days / 7 + ((interval.Days % 7 > 0) ? 1 : 0); 
+                // '+1' - округление в большую сторону.
+                // Если сейчас 30.09.2018, а база 01.10.2018, то мы находимся уже на прошлой неделе, а не на этой же.
+
+                return ((_weekCalculationBaseWeek - 1) - weekInterval + 4) % 4 + 1;
+                // Пример: weekInterval = 3, baseWeek = 2. (baseweek - 1) - weekInerval = -2
+                // Номер недели, если считать с нуля: -2 + 4 = 2
+                // Номер недели, если считать с единицы: -2 + 4 + 1 = 3
+            }
         }
 
         internal static bool FilterSubgroup(int filter, int subgroup)
