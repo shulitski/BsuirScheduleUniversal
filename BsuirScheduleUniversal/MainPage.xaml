@@ -49,7 +49,7 @@
                 <GridView DataContext="{x:Bind Schedule, Mode=TwoWay}" ItemsSource="{Binding Mode=TwoWay}" x:Name="ScheduleGridView" Width="2000" SelectionMode="None" Grid.Row="1">
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="vm:DayScheduleVM">
-                            <local:DayScheduleControl DataContext="{Binding Mode=OneWay}" PairSelected="DayScheduleControl_OnPairSelected" />
+                            <local:DayScheduleControl DataContext="{Binding Mode=OneWay}" PairSelected="DayScheduleControl_OnPairSelected" PairDeleted="Reload" />
                         </DataTemplate>
                     </GridView.ItemTemplate>
                 </GridView>

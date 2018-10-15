@@ -120,5 +120,11 @@ namespace BsuirScheduleUniversal.ViewModels
 
         public string NoteIndicator => (string.IsNullOrEmpty(_obj.note)) ? "" : "!";
         public string Note => _obj.note;
+
+
+        public void Delete()
+        {
+            Loader.DeletePair(_obj);
+        }
     }
 }

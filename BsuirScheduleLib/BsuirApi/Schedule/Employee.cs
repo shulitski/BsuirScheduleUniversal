@@ -17,5 +17,20 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
         public List<string> academicDepartment { get; set; }
         public int id { get; set; }
         public string fio { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            var employee = obj as Employee;
+            return employee != null &&
+                   firstName == employee.firstName &&
+                   lastName == employee.lastName &&
+                   middleName == employee.middleName &&
+                   rank == employee.rank &&
+                   photoLink == employee.photoLink &&
+                   calendarId == employee.calendarId &&
+                   academicDepartment.SequenceEqual(employee.academicDepartment) &&
+                   id == employee.id &&
+                   fio == employee.fio;
+        }
     }
 }

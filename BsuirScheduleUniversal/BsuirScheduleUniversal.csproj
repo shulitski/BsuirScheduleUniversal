@@ -18,7 +18,7 @@
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <PackageCertificateKeyFile>BsuirScheduleUniversal_StoreKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>30529D16E1295B2CC1B2F0C55AD1ABEE9EE3D8B4</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>88C9BED6799A808D8A64BB34DE1494F16D10ACF4</PackageCertificateThumbprint>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>

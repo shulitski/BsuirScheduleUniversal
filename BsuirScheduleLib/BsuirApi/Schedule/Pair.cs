@@ -21,5 +21,24 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
         public string lessonType { get; set; }
         public List<Employee> employee { get; set; }
         public bool zaoch { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            var pair = obj as Pair;
+            return pair != null &&
+                   weekNumber.SequenceEqual(pair.weekNumber) &&
+                   studentGroup.SequenceEqual(pair.studentGroup) &&
+                   studentGroupInformation.SequenceEqual(pair.studentGroupInformation) &&
+                   numSubgroup == pair.numSubgroup &&
+                   auditory.SequenceEqual(pair.auditory) &&
+                   lessonTime == pair.lessonTime &&
+                   startLessonTime == pair.startLessonTime &&
+                   endLessonTime == pair.endLessonTime &&
+                   subject == pair.subject &&
+                   note == pair.note &&
+                   lessonType == pair.lessonType &&
+                   employee.SequenceEqual(pair.employee) &&
+                   zaoch == pair.zaoch;
+        }
     }
 }

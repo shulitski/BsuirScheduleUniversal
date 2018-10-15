@@ -24,6 +24,7 @@ namespace BsuirScheduleUniversal
     public sealed partial class DayScheduleControl : UserControl
     {
         public event Action<PairVM> PairSelected;
+        public event Action PairDeleted;
 
         bool _contextIgnored = false;
         public DayScheduleControl()
@@ -43,6 +44,23 @@ namespace BsuirScheduleUniversal
         private void PairsListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             PairSelected?.Invoke((PairVM)e.AddedItems[0]);
+        }
+
+        private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            var daySchedule = (DayScheduleVM)DataContext;
+            ((sender as MenuFlyoutItem).DataContext as PairVM).Delete();
+            PairDeleted?.Invoke();
+        }
+
+        private void PairsListView_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            var pair = ((FrameworkElement)e.OriginalSource).DataContext as PairVM;
+            if (pair == null)
+                return;
+            ListView listView = (ListView)sender;
+            pairMenuFlyout.ShowAt(listView, e.GetPosition(listView));
+            pairDeleteMenuFlyoutItem.DataContext = pair;
         }
     }
 }

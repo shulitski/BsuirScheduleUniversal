@@ -24,10 +24,19 @@
                   BorderThickness="1"
                   Background="{Binding Background}"
                   ItemsSource="{Binding Pairs}"
-                  SelectionChanged="PairsListView_OnSelectionChanged">
+                  SelectionChanged="PairsListView_OnSelectionChanged"
+                  RightTapped="PairsListView_RightTapped">
+            
+            <ListView.Resources>
+                <MenuFlyout x:Name="pairMenuFlyout">
+                    <MenuFlyoutItem x:Name="pairDeleteMenuFlyoutItem" DataContext="{Binding}" Text="Delete" Click="MenuFlyoutItem_Click" />
+                </MenuFlyout>
+            </ListView.Resources>
+
+
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="vm:PairVM">
-                    <local:PairControl DataContext="{Binding}"/>
+                    <local:PairControl DataContext="{Binding}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

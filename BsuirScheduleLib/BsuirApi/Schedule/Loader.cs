@@ -138,5 +138,47 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
             _updateTimer?.Change(Timeout.Infinite, Timeout.Infinite);
             _updateTimer = new Timer(CheckScheduleUpdate, group, 10000, 10000);
         }
+
+        public static async void DeletePair(Pair pair)
+        {
+            string group = null;
+            foreach(var cacheEntry in cache)
+            {
+                foreach (var schedule in cacheEntry.Value.schedules)
+                {
+                    if (schedule.schedule.Contains(pair))
+                    {
+                        schedule.schedule.Remove(pair);
+                        group = cacheEntry.Key;
+                        break;
+                    }
+                }
+            }
+            if (group == null)
+                return;
+
+            if (IsGroupCached(group))
+            {
+                string fileName = $"group_schedule_{group}.json";
+                StorageFile file = await LocalFolder.GetFileAsync(fileName);
+                string json = await FileIO.ReadTextAsync(file);
+                ScheduleResponse scheduleResponse = JsonConvert.DeserializeObject<ScheduleResponse>(json);
+                foreach (var schedule in scheduleResponse.schedules)
+                {
+                    Pair pairToDelete = null;
+                    foreach(var filePair in schedule.schedule)
+                    {
+                        if (pair.Equals(filePair))
+                        {
+                            pairToDelete = filePair;
+                            break;
+                        }
+                    }
+                    schedule.schedule.Remove(pair);
+                }
+                json = JsonConvert.SerializeObject(scheduleResponse);
+                await SaveToFile(json, group);
+            }
+        }
     }
 }
