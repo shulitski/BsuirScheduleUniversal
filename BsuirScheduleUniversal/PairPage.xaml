@@ -79,7 +79,7 @@
                 <Run Text="Rank: "/>
                 <Run Text="{Binding EmployeeRank}"/>
             </TextBlock>
-            <TextBlock Foreground="Teal" FontSize="15">
+            <TextBlock Foreground="Teal" FontSize="15" TextWrapping="WrapWholeWords">
                 <Run Text="Note: "/>
                 <Run Foreground="Brown" Text="{Binding Note}"/>
             </TextBlock>
