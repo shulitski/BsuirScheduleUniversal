@@ -224,9 +224,17 @@ namespace BsuirScheduleUniversal
             if (_selectionLocked)
                 return;
 
-            if(string.IsNullOrEmpty(GroupComboBox.SelectedItem?.ToString())) return;
+            if(GroupComboBox.SelectedItem == null) return;
 
-            if (GroupComboBox.SelectedItem?.ToString() == "Load group...")
+            var panel = GroupComboBox.SelectedItem as StackPanel;
+            string value = null;
+            if (panel == null) 
+                value = GroupComboBox.SelectedItem as string;
+            else
+                value = ((panel.Children[1] ?? panel.Children[0]) as TextBlock)?.Text;
+            if (value == null) return;
+
+            if (value == "Load group...")
             {
                 AddGroupDialog dlg = new AddGroupDialog();
                 await dlg.ShowAsync();
@@ -236,7 +244,7 @@ namespace BsuirScheduleUniversal
             }
             else
             {
-                SelectedGroup = GroupComboBox.SelectedItem?.ToString();
+                SelectedGroup = value;
             }
         }
 
