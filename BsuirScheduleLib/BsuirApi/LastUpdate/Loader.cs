@@ -11,7 +11,7 @@ namespace BsuirScheduleLib.BsuirApi.LastUpdate
     {
         public static async Task<LastUpdate> Load(string group)
         {
-            string url = $"https://students.bsuir.by/api/v1/studentGroup/lastUpdateDate?studentGroup={group}";
+            string url = string.Format(Constants.lastUpdateFormat, group);
             return JsonConvert.DeserializeObject<LastUpdate>(await Utils.LoadString(url));
         }
     }

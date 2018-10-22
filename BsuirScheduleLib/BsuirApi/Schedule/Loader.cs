@@ -74,7 +74,7 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
             else
             {
                 //Schedule not found
-                string url = $"https://students.bsuir.by/api/v1/studentGroup/schedule?studentGroup={group}";
+                string url = string.Format(Constants.studentScheduleFormat, group);
                 json = await Utils.LoadString(url);
                 scheduleResponse = JsonConvert.DeserializeObject<ScheduleResponse>(json);
                 if(scheduleResponse != null)
