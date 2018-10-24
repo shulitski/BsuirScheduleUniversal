@@ -6,17 +6,28 @@ using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Xaml.Media;
 using BsuirScheduleLib.BsuirApi.Schedule;
+using System.ComponentModel;
+using Windows.UI.Xaml;
+using System.Runtime.CompilerServices;
 
 namespace BsuirScheduleUniversal.ViewModels
 {
-    class ChartDayScheduleVM
+    class ChartDayScheduleVM : INotifyPropertyChanged
     {
         private readonly DateTime _date;
         public List<ChartPairVM> Pairs { get; set; } = new List<ChartPairVM>();
 
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        DispatcherTimer _dispatcherTimer;
+
         private ChartDayScheduleVM(DateTime date)
         {
             _date = date;
+            RunTimer();
         }
 
         public ChartDayScheduleVM()
@@ -24,6 +35,18 @@ namespace BsuirScheduleUniversal.ViewModels
             _date = DateTime.Now;
             for (int i = 0; i < 4; i++)
                 Pairs.Add(new ChartPairVM());
+        }
+
+        private void RunTimer()
+        {
+            _dispatcherTimer = new DispatcherTimer();
+            _dispatcherTimer.Tick += (s, e) =>
+            {
+                NotifyPropertyChanged("Border");
+                NotifyPropertyChanged("Background");
+            };
+            _dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+            _dispatcherTimer.Start();
         }
 
         public static async Task<ChartDayScheduleVM> Create(string group, DateTime date, int subGroup)

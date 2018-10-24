@@ -1,8 +1,10 @@
 ﻿using BsuirScheduleLib.BsuirApi.Schedule;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI;
@@ -11,10 +13,18 @@ using Windows.UI.Xaml.Media;
 
 namespace BsuirScheduleUniversal.ViewModels
 {
-    public class DayScheduleVM
+    public class DayScheduleVM : INotifyPropertyChanged
     {
         private readonly DateTime? _date;
         private readonly DayOfWeek? _dayOfWeek;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        DispatcherTimer _dispatcherTimer;
+
         private bool IsToday => (_date == null) ? (_dayOfWeek.Value == DateTime.Today.DayOfWeek) : (_date.Value.Date == DateTime.Today.Date);
         public List<PairVM> Pairs { get; set; } = new List<PairVM>();
         public string WeekDayName => (_date == null) ? _dayOfWeek.ToString() : $"{_date.Value:dd.MM.yyyy} {_date.Value.DayOfWeek.ToString()}";
@@ -31,11 +41,13 @@ namespace BsuirScheduleUniversal.ViewModels
         private DayScheduleVM(DateTime date)
         {
             _date = date;
+            RunTimer();
         }
 
         private DayScheduleVM(DayOfWeek day)
         {
             _dayOfWeek = day;
+            RunTimer();
         }
 
         public DayScheduleVM()
@@ -43,6 +55,18 @@ namespace BsuirScheduleUniversal.ViewModels
             _date = DateTime.Now;
             for (int i = 0; i < 4; i++)
                 Pairs.Add(new PairVM());
+        }
+
+        private void RunTimer()
+        {
+            _dispatcherTimer = new DispatcherTimer();
+            _dispatcherTimer.Tick += (s, e) =>
+            {
+                NotifyPropertyChanged("Border");
+                NotifyPropertyChanged("Background");
+            };
+            _dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+            _dispatcherTimer.Start();
         }
 
         public static async Task<DayScheduleVM> Create(string group, DateTime date, int subGroup)
