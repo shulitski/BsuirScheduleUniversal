@@ -129,6 +129,7 @@
     <Compile Include="ViewModels\ChartDayScheduleVM.cs" />
     <Compile Include="ViewModels\ChartPairVM.cs" />
     <Compile Include="ViewModels\DayScheduleVM.cs" />
+    <Compile Include="ViewModels\FullScheduleVM.cs" />
     <Compile Include="ViewModels\PairVM.cs" />
   </ItemGroup>
   <ItemGroup>

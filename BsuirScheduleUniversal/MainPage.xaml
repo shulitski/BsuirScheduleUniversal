@@ -10,6 +10,9 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
+    <UserControl.DataContext>
+        <vm:FullScheduleVM/>
+    </UserControl.DataContext>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -18,18 +21,18 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Grid.Row="0">
             <ComboBox x:Name="GroupComboBox" 
-                     PlaceholderText="{x:Bind SelectedGroup, Mode=OneWay}"
+                     PlaceholderText="{Binding SelectedGroup, Mode=OneWay}"
                      Width="150"
                      SelectionChanged="GroupSelected">
             </ComboBox>
             <StackPanel Margin="10 0 0 0" Orientation="Horizontal"  >
                 <TextBlock Text="SubGroup:" Margin="0 0 10 0" VerticalAlignment="Center"/>
-                <RadioButton Content="All" Tag="0" Checked="SubgroupChecked" IsChecked="{x:Bind IsSubgroup0}"/>
-                <RadioButton Content="First" Tag="1" Checked="SubgroupChecked" IsChecked="{x:Bind IsSubgroup1}"/>
-                <RadioButton Content="Second" Tag="2" Checked="SubgroupChecked" IsChecked="{x:Bind IsSubgroup2}"/>
+                <RadioButton Content="All" Tag="0" Checked="SubgroupChecked" IsChecked="{Binding IsSubgroup0}"/>
+                <RadioButton Content="First" Tag="1" Checked="SubgroupChecked" IsChecked="{Binding IsSubgroup1}"/>
+                <RadioButton Content="Second" Tag="2" Checked="SubgroupChecked" IsChecked="{Binding IsSubgroup2}"/>
             </StackPanel>
-            <CheckBox Content="Full schedule" IsChecked="{x:Bind IsFullSchedule, Mode=TwoWay}"/>
-            <ProgressRing IsActive="{x:Bind IsBusy, Mode=OneWay}" Foreground="White" />
+            <CheckBox Content="Full schedule" IsChecked="{Binding IsFullSchedule, Mode=TwoWay}"/>
+            <ProgressRing IsActive="{Binding IsBusy, Mode=OneWay}" Foreground="White" />
             <Button Click="ChartButton_OnClick">Chart</Button>
         </StackPanel>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" 
@@ -44,10 +47,10 @@
                 <Button HorizontalAlignment="Stretch" 
                         Grid.Row="0" 
                         Click="LoadUpClick" 
-                        Visibility="{x:Bind LoadMoreVisibility, Mode=OneWay}">
+                        Visibility="{Binding LoadMoreVisibility, Mode=OneWay}">
                     Load more
                 </Button>
-                <GridView DataContext="{x:Bind Schedule, Mode=TwoWay}" ItemsSource="{Binding Mode=TwoWay}" x:Name="ScheduleGridView" Width="2000" SelectionMode="None" Grid.Row="1">
+                <GridView DataContext="{Binding Schedule, Mode=TwoWay}" ItemsSource="{Binding Mode=TwoWay}" x:Name="ScheduleGridView" Width="2000" SelectionMode="None" Grid.Row="1">
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="vm:DayScheduleVM">
                             <local:DayScheduleControl DataContext="{Binding Mode=OneWay}" PairSelected="DayScheduleControl_OnPairSelected" PairDeleted="DayScheduleControl_PairDeleted" />
@@ -57,7 +60,7 @@
                 <Button HorizontalAlignment="Stretch" 
                         Grid.Row="2" 
                         Click="LoadDownClick" 
-                        Visibility="{x:Bind LoadMoreVisibility, Mode=OneWay}">
+                        Visibility="{Binding LoadMoreVisibility, Mode=OneWay}">
                     Load more
                 </Button>
             </Grid>
