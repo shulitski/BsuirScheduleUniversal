@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
+using BsuirScheduleLib.BsuirApi;
 
 namespace BsuirScheduleUniversal.ViewModels
 {
@@ -26,15 +27,28 @@ namespace BsuirScheduleUniversal.ViewModels
         DispatcherTimer _dispatcherTimer;
 
         private bool IsToday => (_date == null) ? (_dayOfWeek.Value == DateTime.Today.DayOfWeek) : (_date.Value.Date == DateTime.Today.Date);
+        private bool IsHolyday => _date?.IsHolyday() ?? (_dayOfWeek.Value == DayOfWeek.Sunday);
         public List<PairVM> Pairs { get; set; } = new List<PairVM>();
         public string WeekDayName => (_date == null) ? _dayOfWeek.ToString() : $"{_date.Value:dd.MM.yyyy} {_date.Value.DayOfWeek.ToString()}";
-        public Brush Background => IsToday
-            ? (Brush)new SolidColorBrush(Color.FromArgb(32, 0, 255, 255))
-            : (Brush)new SolidColorBrush(Colors.Transparent);
+        public Brush Border => GetBorderAndBackground().Item1;
+        public Brush Background => GetBorderAndBackground().Item2;
         
-        public Brush Border => IsToday
-            ? (Brush)new SolidColorBrush(Color.FromArgb(255, 0, 255, 255))
-            : (Brush)new SolidColorBrush(Colors.Transparent);
+        private (Brush, Brush) GetBorderAndBackground()
+        {
+            Color borderColor;
+            Color backgroundColor;
+            if (IsToday && !IsHolyday)
+                borderColor = Color.FromArgb(255, 0, 255, 255);
+            else if (!IsToday && IsHolyday)
+                borderColor = Color.FromArgb(255, 255, 96, 96);
+            else if (IsToday && IsHolyday)
+                borderColor = Color.FromArgb(255, 192, 64, 255);
+            else
+                borderColor = Colors.Transparent;
+            backgroundColor = borderColor;
+            backgroundColor.A = (byte)((backgroundColor.A > 0) ? 32 : 0);
+            return (new SolidColorBrush(borderColor), new SolidColorBrush(backgroundColor));
+        }
 
         public double ControlHeight => (_date == null) ? 700 : 300;
 

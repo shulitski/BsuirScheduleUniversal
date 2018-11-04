@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace BsuirScheduleLib.BsuirApi
 {
-    internal static class Utils
+    public static class Utils
     {
         private static DateTime _weekCalculationBaseDate = new DateTime(2018, 10, 1);
         private static int _weekCalculationBaseWeek = 2;
@@ -82,6 +82,57 @@ namespace BsuirScheduleLib.BsuirApi
         {
             operation.AsTask().Wait();
             return operation.GetResults();
+        }
+
+        internal static DateTime GetEaster(this DateTime date)
+        {
+            // From https://www.e-reading.club/chapter.php/1008920/26/Spravochnik_pravoslavnogo_cheloveka._Chast_4._Pravoslavnye_posty_i_prazdniki.html
+            var a = date.Year % 19;
+            var b = date.Year % 4;
+            var c = date.Year % 7;
+            var d = (19 * a + 15) % 30;
+            var e = (2 * b + 4 * c + 6 * d + 6) % 7;
+            var month = 3;
+            var day = 22 + d + e + 13; // 13 - разница между стилями
+            if (day > 31)
+            {
+                day -= 31;
+                month++;
+            }
+            if (day > 30)
+            {
+                day -= 30;
+                month++;
+            }
+
+            return new DateTime(date.Year, month, day);
+        }
+
+
+        public static bool IsHolyday(this DateTime date)
+        {
+            if (date.DayOfWeek == DayOfWeek.Sunday)
+                return true;
+            if ((date.Month == 1) && (date.Day == 1)) // Новый год
+                return true;
+            if ((date.Month == 1) && (date.Day == 7)) // Православное рождество
+                return true;
+            if ((date.Month == 3) && (date.Day == 8)) // 8 марта
+                return true;
+            if ((date.Month == 5) && (date.Day == 1)) // 1 мая
+                return true;
+            if ((date.Month == 5) && (date.Day == 9)) // День победы
+                return true;
+            if ((date.Month == 7) && (date.Day == 3)) // День независимости
+                return true;
+            if ((date.Month == 11) && (date.Day == 7)) // День Октябрьской Революции
+                return true;
+            if ((date.Month == 12) && (date.Day == 25)) // Католическое рождество
+                return true;
+            if (date.Date == date.GetEaster().AddDays(9)) // Радуница
+                return true;
+
+            return false;
         }
     }
 }
