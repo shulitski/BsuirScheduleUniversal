@@ -64,7 +64,17 @@ namespace BsuirScheduleUniversal.ViewModels
         public string EmployeeMiddleName => _obj.employee.FirstOrDefault()?.middleName;
         public string EmployeeLastName => _obj.employee.FirstOrDefault()?.lastName;
 
-        public string ShortLessonType => $" ({_obj.lessonType})";
+        private string GetShortLessonType()
+        {
+            var lessonTypeName = _obj.lessonType;
+            if (lessonTypeName == "Экзамен")
+                lessonTypeName = "Экз";
+            if (lessonTypeName == "Консультация")
+                lessonTypeName = "Конс";
+            return $" ({lessonTypeName})";
+        }
+
+        public string ShortLessonType => GetShortLessonType();
         public string LessonType => _obj.lessonType;
         public Brush LessonTypeBrush
         {
@@ -75,8 +85,10 @@ namespace BsuirScheduleUniversal.ViewModels
                     case "ЛК":
                         return new SolidColorBrush(Colors.LightGray);
                     case "ПЗ":
+                    case "Консультация":
                         return new SolidColorBrush(Colors.Gold);
                     case "ЛР":
+                    case "Экзамен":
                         return new SolidColorBrush(Colors.Brown);
                     default:
                         return new SolidColorBrush(Colors.LightGray);
