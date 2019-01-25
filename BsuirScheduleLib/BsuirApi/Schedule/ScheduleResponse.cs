@@ -9,6 +9,7 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
     public class ScheduleResponse
     {
         public List<Schedule> schedules { get; set; }
+        public List<Schedule> examSchedules { get; set; }
         public string todayDate { get; set; }
         public int currentWeekNumber { get; set; }
     }

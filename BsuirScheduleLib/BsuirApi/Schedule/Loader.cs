@@ -95,10 +95,29 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
         {
             var response = await Load(group);
 
-            var schedule = response.schedules.Find(s => Utils.StringToDayOfWeek(s.weekday) == day.DayOfWeek);
-            return schedule?.schedule?.FindAll(pair => 
+            var examDates = response.examSchedules.Select((obj) => obj.GetDate());
+            examDates = examDates.Any() ? examDates : null;
+            var minExamDate = examDates?.Min();
+
+            Schedule schedule;
+
+            if(examDates != null && minExamDate <= day)
+            {
+                schedule = response.examSchedules.Find(s => s.GetDate() == day);
+
+                if (schedule == null)
+                    return new List<Pair>();
+
+                return schedule.schedule;
+            }
+            else
+            {
+                schedule = response.schedules.Find(s => Utils.StringToDayOfWeek(s.weekday) == day.DayOfWeek);
+
+                return schedule?.schedule?.FindAll(pair =>
                 Utils.FilterSubgroup(subgroup, pair.numSubgroup)
                 && pair.weekNumber.Contains(day.BsuirWeekNum()));
+            }
         }
 
         public static async Task<List<Pair>> LoadPairsFull(string group, DayOfWeek day, int subgroup)
