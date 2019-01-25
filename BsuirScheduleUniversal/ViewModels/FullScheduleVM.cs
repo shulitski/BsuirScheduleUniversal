@@ -190,7 +190,13 @@ namespace BsuirScheduleUniversal.ViewModels
                     ? (_endDate   =   _endDate.Value.AddDays( 1)).Value 
                     : (_beginDate = _beginDate.Value.AddDays(-1)).Value;
 
-                Schedule.Add(await DayScheduleVM.Create(SelectedGroup, date, CheckedSubgroup));
+                var daySchedule = await DayScheduleVM.Create(SelectedGroup, date, CheckedSubgroup);
+
+                if (down)
+                    Schedule.Add(daySchedule);
+                else
+                    Schedule.Insert(0, daySchedule);
+
             }
             NotifyPropertyChanged("Schedule");
         }
