@@ -97,9 +97,9 @@ namespace BsuirScheduleUniversal.ViewModels
         private async void SetSelectedGroup(string value)
         {
             _selectedGroup = value;
-            NotifyPropertyChanged();
-            await Reload();
             LocalSettings.Values["selectedGroup"] = _selectedGroup;
+            await Reload();
+            NotifyPropertyChanged("selectedGroup");
         }
 
         private async Task<ObservableCollection<DayScheduleVM>> LoadSchedule()
@@ -151,18 +151,15 @@ namespace BsuirScheduleUniversal.ViewModels
         public async Task Reload()
         {
             //if (ScheduleGridView == null) return;
-            if (SelectedGroup == null) return;
             IsBusy = true;
-
             try
             {
                 Schedule = null;
-
-                if (IsFullSchedule)
-                    Schedule = await LoadFullSchedule();
-                else
-                    Schedule = await LoadSchedule();
-                Loader.AddScheduleUpdateListener(OnScheduleUpdated, SelectedGroup);
+                if (SelectedGroup != null)
+                {
+                    Schedule = IsFullSchedule ? await LoadFullSchedule() : await LoadSchedule();
+                    Loader.AddScheduleUpdateListener(OnScheduleUpdated, SelectedGroup);
+                }
             }
             catch (ScheduleLoadingException e)
             {
@@ -174,8 +171,6 @@ namespace BsuirScheduleUniversal.ViewModels
             {
                 // ignored
             }
-
-            //FillGroupCombobox();
             NotifyPropertyChanged("Schedule");
             NotifyPropertyChanged("LoadMoreVisibility");
             IsBusy = false;
@@ -218,6 +213,15 @@ namespace BsuirScheduleUniversal.ViewModels
                     SelectedGroup = value;
                     break;
             }
+        }
+
+        public async void DeleteGroup(string group)
+        {
+            await Loader.DeleteGroup(group);
+            if (SelectedGroup == group)
+                SelectedGroup = null;
+            else
+                SelectedGroup = SelectedGroup;
         }
 
         #endregion

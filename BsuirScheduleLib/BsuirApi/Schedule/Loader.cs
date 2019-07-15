@@ -168,6 +168,11 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
             _updateTimer = new Timer(CheckScheduleUpdate, group, 10000, 10000);
         }
 
+        public static void RemoveScheduleUpdateListener()
+        {
+            _onScheluleUpdated = null;
+        }
+
         public static async void DeletePair(Pair pair)
         {
             string group = null;
@@ -210,7 +215,7 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
             }
         }
 
-        public static async void DeleteGroup(string group)
+        public static async Task DeleteGroup(string group)
         {
             cache.Remove(group);
 
@@ -230,7 +235,7 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
                             newCachedGroups += "," + cachedGroup;
                     }
                 }
-                CachedGroups = newCachedGroups;
+                CachedGroups = (newCachedGroups != "") ? newCachedGroups : null;
             }
         }
     }

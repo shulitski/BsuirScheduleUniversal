@@ -38,6 +38,9 @@ namespace BsuirScheduleUniversal
             InitializeComponent();
             Reload();
             FillGroupCombobox();
+            VM.PropertyChanged += (object sender, PropertyChangedEventArgs e) => {
+                if (e.PropertyName == "selectedGroup") Reload();
+            };
         }
 
         private void SubgroupChecked(object sender, RoutedEventArgs e)
@@ -78,7 +81,7 @@ namespace BsuirScheduleUniversal
 
                     GroupComboBox.Items.Add(panel);
                     if (group == VM.SelectedGroup)
-                        GroupComboBox.SelectedItem = group;
+                        GroupComboBox.SelectedItem = panel;
                 }
             }
             GroupComboBox.Items.Add("Load group...");
@@ -103,8 +106,7 @@ namespace BsuirScheduleUniversal
 
         private void DeleteGroup(string group)
         {
-            Loader.DeleteGroup(group);
-            FillGroupCombobox();
+            VM.DeleteGroup(group);
         }
 
         private void ChartButton_OnClick(object sender, RoutedEventArgs e)
