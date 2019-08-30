@@ -13,7 +13,7 @@
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
 
     <Grid>
-        <AutoSuggestBox x:Name="GroupTextBox" 
+        <AutoSuggestBox x:Name="ScheduleTextBox" 
                    PlaceholderText="Group number" 
                    HorizontalAlignment="Stretch"
                    QueryIcon="Find"

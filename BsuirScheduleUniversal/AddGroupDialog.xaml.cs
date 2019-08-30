@@ -32,7 +32,7 @@ namespace BsuirScheduleUniversal
 
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            Value = GroupTextBox.Text;
+            Value = ScheduleTextBox.Text;
         }
 
         private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
@@ -45,7 +45,11 @@ namespace BsuirScheduleUniversal
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
                 if (_groups != null)
-                    GroupTextBox.ItemsSource = _groups.FindAll(g => g.name.Contains(sender.Text)).Select(g => g.name);
+                {
+                    var scheduleList = _groups.FindAll(g => g.name.Contains(sender.Text)).Select(g => g.name);
+                    scheduleList = scheduleList.Concat(_employees.FindAll(e => e.Contains(sender.Text)).Select(e => e.FullName));
+                    ScheduleTextBox.ItemsSource = scheduleList;
+                }
             }
         }
 
@@ -53,7 +57,7 @@ namespace BsuirScheduleUniversal
         {
             _groups = await GroupApi.Loader.Load();
             _employees = await EmployeeApi.Loader.Load();
-            GroupTextBox.IsEnabled = true;
+            ScheduleTextBox.IsEnabled = true;
         }
     }
 }

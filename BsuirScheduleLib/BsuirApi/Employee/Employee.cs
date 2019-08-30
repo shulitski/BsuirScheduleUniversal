@@ -17,6 +17,13 @@ namespace BsuirScheduleLib.BsuirApi.Employee
         public List<string> academicDepartment { get; set; }
         public int id { get; set; }
         public string fio { get; set; }
+        public string FullName => lastName + " " + firstName + " " + middleName;
+
+        public bool Contains(string str)
+        {
+            var parts = str.Split(' ');
+            return parts.All(p => firstName.Contains(p) || middleName.Contains(p) || lastName.Contains(p));
+        }
 
         public override bool Equals(object obj)
         {
