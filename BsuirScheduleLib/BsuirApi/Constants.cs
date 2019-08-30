@@ -12,5 +12,6 @@ namespace BsuirScheduleLib.BsuirApi
         public const string studentScheduleFormat = domain + "/api/v1/studentGroup/schedule?studentGroup={0}";
         public const string lastUpdateFormat = domain + "/api/v1/studentGroup/lastUpdateDate?studentGroup={0}";
         public const string groupsUrl = domain + "/api/v1/groups";
+        public const string employeesUrl = domain + "/api/v1/employees";
     }
 }

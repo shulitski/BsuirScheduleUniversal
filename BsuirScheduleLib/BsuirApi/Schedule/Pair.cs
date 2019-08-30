@@ -19,7 +19,7 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
         public string subject { get; set; }
         public string note { get; set; }
         public string lessonType { get; set; }
-        public List<Employee> employee { get; set; }
+        public List<Employee.Employee> employee { get; set; }
         public bool zaoch { get; set; }
 
         public override bool Equals(object obj)

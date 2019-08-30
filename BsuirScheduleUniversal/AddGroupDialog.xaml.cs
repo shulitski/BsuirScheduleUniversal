@@ -1,4 +1,5 @@
-﻿using BsuirScheduleLib.BsuirApi.Group;
+﻿using GroupApi = BsuirScheduleLib.BsuirApi.Group;
+using EmployeeApi = BsuirScheduleLib.BsuirApi.Employee;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,7 +22,8 @@ namespace BsuirScheduleUniversal
     public sealed partial class AddGroupDialog : ContentDialog
     {
         public string Value { get; set; }
-        private List<Group> _groups;
+        private List<GroupApi.Group> _groups;
+        private List<EmployeeApi.Employee> _employees;
 
         public AddGroupDialog()
         {
@@ -49,7 +51,8 @@ namespace BsuirScheduleUniversal
 
         private async void GroupTextBox_Loaded(object sender, RoutedEventArgs e)
         {
-            _groups = await Loader.Load();
+            _groups = await GroupApi.Loader.Load();
+            _employees = await EmployeeApi.Loader.Load();
             GroupTextBox.IsEnabled = true;
         }
     }

@@ -7,6 +7,7 @@ using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 using BsuirScheduleLib.BsuirApi.Schedule;
+using EmployeeApi = BsuirScheduleLib.BsuirApi.Employee;
 
 namespace BsuirScheduleUniversal.ViewModels
 {
@@ -27,9 +28,9 @@ namespace BsuirScheduleUniversal.ViewModels
                 endLessonTime = "09:35",
                 subject = "ОСиСП",
                 numSubgroup = 2,
-                employee = new List<Employee>
+                employee = new List<EmployeeApi.Employee>
                 {
-                    new Employee {lastName = "Конь", firstName = "Игорь", middleName = "Генадиевич", rank = "Профессор"}
+                    new EmployeeApi.Employee {lastName = "Конь", firstName = "Игорь", middleName = "Генадиевич", rank = "Профессор"}
                 },
                 lessonType = "ЛР",
                 weekNumber = new List<int> {1, 3},

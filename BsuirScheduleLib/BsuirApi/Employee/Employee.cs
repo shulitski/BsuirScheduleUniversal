@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BsuirScheduleLib.BsuirApi.Schedule
+namespace BsuirScheduleLib.BsuirApi.Employee
 {
     public class Employee
     {
