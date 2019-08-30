@@ -94,7 +94,7 @@ namespace BsuirScheduleUniversal.ViewModels
             CheckedSubgroup = subgroup;
         }
 
-        private async Task SetSelectedGroup(string value)
+        public async Task SetSelectedGroup(string value)
         {
             var prevSelectedGroup = _selectedGroup;
             _selectedGroup = value;
@@ -203,34 +203,6 @@ namespace BsuirScheduleUniversal.ViewModels
 
             }
             NotifyPropertyChanged("Schedule");
-        }
-
-        public async Task GroupSelected(string value)
-        {
-            switch (value)
-            {
-                case null:
-                    return;
-                case "Load group...":
-                    AddGroupDialog dlg = new AddGroupDialog();
-                    await dlg.ShowAsync();
-                    if (dlg.Value == null) return;
-
-                    try
-                    {
-                        await SetSelectedGroup(dlg.Value);
-                    }
-                    catch (ScheduleLoadingException)
-                    {
-                        MessageDialog errorDlg = new MessageDialog("Invalid group id or teacher name");
-                        await errorDlg.ShowAsync();
-                    }
-                    
-                    break;
-                default:
-                    SelectedGroup = value;
-                    break;
-            }
         }
 
         public async void DeleteGroup(string group)

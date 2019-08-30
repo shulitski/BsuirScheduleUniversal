@@ -84,11 +84,32 @@ namespace BsuirScheduleUniversal
                         GroupComboBox.SelectedItem = panel;
                 }
             }
-            GroupComboBox.Items.Add("Load group...");
+            Button loadBtn = new Button();
+            loadBtn.Content = "Load group...";
+            loadBtn.HorizontalAlignment = HorizontalAlignment.Stretch;
+            loadBtn.Click += (s, e) => LoadGroup();
+            GroupComboBox.Items.Add(loadBtn);
             _selectionLocked = false;
         }
 
-        private async void GroupSelected(object sender, SelectionChangedEventArgs e)
+        private async void LoadGroup()
+        {
+            AddGroupDialog dlg = new AddGroupDialog();
+            await dlg.ShowAsync();
+            if (dlg.Value == null) return;
+
+            try
+            {
+                await VM.SetSelectedGroup(dlg.Value);
+            }
+            catch (ScheduleLoadingException)
+            {
+                MessageDialog errorDlg = new MessageDialog("Invalid group id or teacher name");
+                await errorDlg.ShowAsync();
+            }
+        }
+
+        private void GroupSelected(object sender, SelectionChangedEventArgs e)
         {
             if (_selectionLocked)
                 return;
@@ -101,7 +122,8 @@ namespace BsuirScheduleUniversal
             else
                 value = GroupComboBox.SelectedItem as string;
 
-            await VM.GroupSelected(value);
+            if (value != null)
+                VM.SelectedGroup = value;
         }
 
         private void DeleteGroup(string group)
