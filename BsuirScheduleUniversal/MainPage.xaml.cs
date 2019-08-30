@@ -39,7 +39,10 @@ namespace BsuirScheduleUniversal
             Reload();
             FillGroupCombobox();
             VM.PropertyChanged += (object sender, PropertyChangedEventArgs e) => {
-                if (e.PropertyName == "selectedGroup") Reload();
+                if (e.PropertyName == "selectedGroup")
+                    Reload();
+                else if (e.PropertyName == "GroupList")
+                    FillGroupCombobox();
             };
         }
 
@@ -60,6 +63,7 @@ namespace BsuirScheduleUniversal
         {
             _selectionLocked = true;
             GroupComboBox.Items.Clear();
+            object selectedItem = null;
             if (Loader.CachedGroupsArray != null)
             {
                 foreach (var group in Loader.CachedGroupsArray)
@@ -77,7 +81,7 @@ namespace BsuirScheduleUniversal
                     
                     GroupComboBox.Items.Add(name);
                     if (group == VM.SelectedGroup)
-                        GroupComboBox.SelectedItem = name;
+                        selectedItem = name;
                 }
             }
             Button loadBtn = new Button();
@@ -85,6 +89,7 @@ namespace BsuirScheduleUniversal
             loadBtn.HorizontalAlignment = HorizontalAlignment.Stretch;
             loadBtn.Click += (s, e) => LoadGroup();
             GroupComboBox.Items.Add(loadBtn);
+            GroupComboBox.SelectedValue = GroupComboBox.Items.Where(i => (i as TextBlock)?.Text == VM.SelectedGroup).FirstOrDefault();
             _selectionLocked = false;
         }
 
@@ -107,12 +112,21 @@ namespace BsuirScheduleUniversal
 
         private void GroupSelected(object sender, SelectionChangedEventArgs e)
         {
-            if (_selectionLocked)
-                return;
-            if(GroupComboBox.SelectedItem == null) return;
-            string value = (GroupComboBox.SelectedItem as TextBlock)?.Text;
-            if (value != null)
-                VM.SelectedGroup = value;
+            if (GroupComboBox.SelectedItem is TextBlock)
+            {
+                if (_selectionLocked)
+                    return;
+                string value = (GroupComboBox.SelectedItem as TextBlock)?.Text;
+                if (value != null && value != VM.SelectedGroup)
+                    VM.SelectedGroup = value;
+            }
+            else // Select right item
+            {
+                var item = GroupComboBox.Items.Where(i => (i as TextBlock)?.Text == VM.SelectedGroup && VM.SelectedGroup != null).FirstOrDefault();
+                GroupComboBox.SelectedValue = item;
+                if (item == null)
+                    GroupComboBox.PlaceholderText = "Add schedule";
+            }
         }
 
         private void DeleteGroup(string group)

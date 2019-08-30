@@ -211,7 +211,7 @@ namespace BsuirScheduleUniversal.ViewModels
             if (SelectedGroup == group)
                 SelectedGroup = null;
             else
-                SelectedGroup = SelectedGroup;
+                NotifyPropertyChanged("GroupList");
         }
 
         #endregion
