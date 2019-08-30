@@ -64,24 +64,20 @@ namespace BsuirScheduleUniversal
             {
                 foreach (var group in Loader.CachedGroupsArray)
                 {
-                    var panel = new StackPanel {Orientation = Orientation.Horizontal};
-
-                    var button = new Button
-                    {
-                        Content = "X",
-                        Margin = new Thickness(0, 0, 10, 0)
-                    };
-
-                    button.Click += (s, e) => DeleteGroup(group);
-                    panel.Children.Add(button);
-
                     var name = new TextBlock {Text = group};
-                    panel.Children.Add(name);
-
-
-                    GroupComboBox.Items.Add(panel);
+                    var contextMenu = new MenuFlyout();
+                    name.ContextFlyout = contextMenu;
+                    MenuFlyoutItem deleteMenuItem = new MenuFlyoutItem();
+                    deleteMenuItem.Text = "Delete";
+                    deleteMenuItem.Click += (s, e) => DeleteGroup(group);
+                    contextMenu.Items.Add(deleteMenuItem);
+                    var options = new FlyoutShowOptions();
+                    options.ShowMode = FlyoutShowMode.Transient;
+                    name.RightTapped += (s, e) => contextMenu.ShowAt(name, options);
+                    
+                    GroupComboBox.Items.Add(name);
                     if (group == VM.SelectedGroup)
-                        GroupComboBox.SelectedItem = panel;
+                        GroupComboBox.SelectedItem = name;
                 }
             }
             Button loadBtn = new Button();
@@ -113,15 +109,8 @@ namespace BsuirScheduleUniversal
         {
             if (_selectionLocked)
                 return;
-
             if(GroupComboBox.SelectedItem == null) return;
-
-            string value;
-            if (GroupComboBox.SelectedItem is StackPanel panel)
-                value = ((panel.Children[1] ?? panel.Children[0]) as TextBlock)?.Text;
-            else
-                value = GroupComboBox.SelectedItem as string;
-
+            string value = (GroupComboBox.SelectedItem as TextBlock)?.Text;
             if (value != null)
                 VM.SelectedGroup = value;
         }
