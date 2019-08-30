@@ -39,5 +39,10 @@ namespace BsuirScheduleLib.BsuirApi.Employee
                    id == employee.id &&
                    fio == employee.fio;
         }
+
+        public override string ToString()
+        {
+            return FullName;
+        }
     }
 }

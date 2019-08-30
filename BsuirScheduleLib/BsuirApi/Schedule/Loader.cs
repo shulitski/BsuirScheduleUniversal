@@ -21,51 +21,51 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
         private static Timer _updateTimer;
         private static bool _loading;
 
-        private static string CachedGroups
+        private static string CachedSchedules
         {
-            get => LocalSettings.Values["cachedGroups"] as string;
-            set => LocalSettings.Values["cachedGroups"] = value;
+            get => LocalSettings.Values["cachedSchedules"] as string;
+            set => LocalSettings.Values["cachedSchedules"] = value;
         }
 
-        public static IEnumerable<string> CachedGroupsArray => CachedGroups?.Split(',');
+        public static IEnumerable<string> CachedSchedulesArray => CachedSchedules?.Split(',');
 
-        private static bool IsGroupCached(string group)
+        private static bool IsScheduleCached(string name)
         {
-            return CachedGroupsArray?.Contains(group) ?? false;
+            return CachedSchedulesArray?.Contains(name) ?? false;
         }
 
-        private static async Task SaveToFile(string json, string group)
+        private static async Task SaveToFile(string json, string name)
         {
-            string fileName = $"group_schedule_{group}.json";
+            string fileName = $"schedule_{name}.json";
             StorageFile sampleFile = await LocalFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
             await FileIO.WriteTextAsync(sampleFile, json);
-            if (string.IsNullOrEmpty(CachedGroups) || !CachedGroups.Contains(group))
+            if (string.IsNullOrEmpty(CachedSchedules) || !CachedSchedules.Contains(name))
             {
-                if (string.IsNullOrEmpty(CachedGroups))
-                    CachedGroups += $"{group}";
+                if (string.IsNullOrEmpty(CachedSchedules))
+                    CachedSchedules += $"{name}";
                 else
-                    CachedGroups += $",{group}";
+                    CachedSchedules += $",{name}";
             }
         }
 
-        private static void Save(string group, ScheduleResponse scheduleResponse)
+        private static void Save(string name, ScheduleResponse scheduleResponse)
         {
-            if (cache.ContainsKey(group))
-                cache.Remove(group);
-            cache.Add(group, scheduleResponse);
+            if (cache.ContainsKey(name))
+                cache.Remove(name);
+            cache.Add(name, scheduleResponse);
         }
 
-        public static async Task<ScheduleResponse> Load(string group, bool allowCache = true)
+        public static async Task<ScheduleResponse> Load(ScheduleQuery query, bool allowCache = true)
         {
-            if (allowCache && cache.ContainsKey(group))
-                return cache[group];
+            if (allowCache && cache.ContainsKey(query.Value))
+                return cache[query.Value];
 
             _loading = true;
             string json;
-            string fileName = $"group_schedule_{group}.json";
+            string fileName = $"schedule_{query.Value}.json";
 
             ScheduleResponse scheduleResponse = null;
-            if (allowCache && IsGroupCached(group))
+            if (allowCache && IsScheduleCached(query.Value))
             {
                 StorageFile file = await LocalFolder.GetFileAsync(fileName);
                 json = await FileIO.ReadTextAsync(file);
@@ -74,16 +74,17 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
             else
             {
                 //Schedule not found
-                string url = string.Format(Constants.studentScheduleFormat, group);
+                var format = query.IsGroup ? Constants.studentScheduleFormat : Constants.employeeScheduleFormat;
+                string url = string.Format(format, query.Value);
                 json = await Utils.LoadString(url);
                 scheduleResponse = JsonConvert.DeserializeObject<ScheduleResponse>(json);
                 if(scheduleResponse != null)
-                    await SaveToFile(json, group);
+                    await SaveToFile(json, query.Value);
             }
             if (scheduleResponse == null)
                 throw new ScheduleLoadingException();
 
-            Save(group, scheduleResponse);
+            Save(query.Value, scheduleResponse);
 
             var scheduleDate = DateTime.ParseExact(scheduleResponse.todayDate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
             Utils.SetWeekCalculationBase(scheduleDate, scheduleResponse.currentWeekNumber);
@@ -91,9 +92,9 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
             return scheduleResponse;
         }
 
-        public static async Task<List<Pair>> LoadPairs(string group, DateTime day, int subgroup)
+        public static async Task<List<Pair>> LoadPairs(ScheduleQuery query, DateTime day, int subgroup)
         {
-            var response = await Load(group);
+            var response = await Load(query);
 
             var examDates = response.examSchedules.Select((obj) => obj.GetDate());
             examDates = examDates.Any() ? examDates : null;
@@ -120,9 +121,9 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
             }
         }
 
-        public static async Task<List<Pair>> LoadPairsFull(string group, DayOfWeek day, int subgroup)
+        public static async Task<List<Pair>> LoadPairsFull(ScheduleQuery query, DayOfWeek day, int subgroup)
         {
-            var response = await Load(group);
+            var response = await Load(query);
 
             var schedule = response.schedules.Find(s => Utils.StringToDayOfWeek(s.weekday) == day);
             var pairs = schedule?.schedule?.FindAll(pair => Utils.FilterSubgroup(subgroup, pair.numSubgroup));
@@ -143,15 +144,15 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
             {
                 if(_loading)
                     return;
-                var group = (string) state;
-                var lastUpdate = await LastUpdate.Loader.Load(group);
-                var schedule = await Load(group);
+                var name = (string) state;
+                var lastUpdate = await LastUpdate.Loader.Load(name);
+                var schedule = await Load(new ScheduleQuery { Value = name });
                 var updateDate =
                     DateTime.ParseExact(lastUpdate.lastUpdateDate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
                 var scheduleDate = DateTime.ParseExact(schedule.todayDate, "dd.MM.yyyy", CultureInfo.InvariantCulture);
                 if (updateDate <= scheduleDate) return;
 
-                var newSchedule = await Load(group, false);
+                var newSchedule = await Load(new ScheduleQuery { Value = name }, false);
                 _onScheluleUpdated(newSchedule);
             }
             catch (Exception)
@@ -161,11 +162,11 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
             
         }
 
-        public static void AddScheduleUpdateListener(Action<ScheduleResponse> onScheduleUpdated, string group)
+        public static void AddScheduleUpdateListener(Action<ScheduleResponse> onScheduleUpdated, string name)
         {
             _onScheluleUpdated = onScheduleUpdated;
             _updateTimer?.Change(Timeout.Infinite, Timeout.Infinite);
-            _updateTimer = new Timer(CheckScheduleUpdate, group, 10000, 10000);
+            _updateTimer = new Timer(CheckScheduleUpdate, name, 10000, 10000);
         }
 
         public static void RemoveScheduleUpdateListener()
@@ -175,7 +176,7 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
 
         public static async void DeletePair(Pair pair)
         {
-            string group = null;
+            string name = null;
             foreach(var cacheEntry in cache)
             {
                 foreach (var schedule in cacheEntry.Value.schedules)
@@ -183,17 +184,17 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
                     if (schedule.schedule.Contains(pair))
                     {
                         schedule.schedule.Remove(pair);
-                        group = cacheEntry.Key;
+                        name = cacheEntry.Key;
                         break;
                     }
                 }
             }
-            if (group == null)
+            if (name == null)
                 return;
 
-            if (IsGroupCached(group))
+            if (IsScheduleCached(name))
             {
-                string fileName = $"group_schedule_{group}.json";
+                string fileName = $"schedule_{name}.json";
                 StorageFile file = await LocalFolder.GetFileAsync(fileName);
                 string json = await FileIO.ReadTextAsync(file);
                 ScheduleResponse scheduleResponse = JsonConvert.DeserializeObject<ScheduleResponse>(json);
@@ -211,31 +212,31 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
                     schedule.schedule.Remove(pair);
                 }
                 json = JsonConvert.SerializeObject(scheduleResponse);
-                await SaveToFile(json, group);
+                await SaveToFile(json, name);
             }
         }
 
-        public static async Task DeleteGroup(string group)
+        public static async Task DeleteSchedule(string name)
         {
-            cache.Remove(group);
+            cache.Remove(name);
 
-            if (IsGroupCached(group))
+            if (IsScheduleCached(name))
             {
-                string fileName = $"group_schedule_{group}.json";
+                string fileName = $"schedule_{name}.json";
                 StorageFile file = await LocalFolder.GetFileAsync(fileName);
                 await file.DeleteAsync();
-                string newCachedGroups = "";
-                foreach(var cachedGroup in CachedGroupsArray)
+                string newCachedScheduless = "";
+                foreach(var cachedSchedule in CachedSchedulesArray)
                 {
-                    if(cachedGroup != group)
+                    if(cachedSchedule != name)
                     {
-                        if(newCachedGroups == "")
-                            newCachedGroups += cachedGroup;
+                        if(newCachedScheduless == "")
+                            newCachedScheduless += cachedSchedule;
                         else
-                            newCachedGroups += "," + cachedGroup;
+                            newCachedScheduless += "," + cachedSchedule;
                     }
                 }
-                CachedGroups = (newCachedGroups != "") ? newCachedGroups : null;
+                CachedSchedules = (newCachedScheduless != "") ? newCachedScheduless : null;
             }
         }
     }

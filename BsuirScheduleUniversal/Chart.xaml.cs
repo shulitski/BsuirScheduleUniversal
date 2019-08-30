@@ -58,7 +58,8 @@ namespace BsuirScheduleUniversal
                 }
                 for (int i = 0; i < 14; i++)
                 {
-                    schedule.Add(await ChartDayScheduleVM.Create(SelectedGroup, day.AddDays(i), CheckedSubgroup));
+                    var query = new BsuirScheduleLib.BsuirApi.Schedule.ScheduleQuery { Value = SelectedGroup };
+                    schedule.Add(await ChartDayScheduleVM.Create(query, day.AddDays(i), CheckedSubgroup));
                 }
 
                 ChartDridView.ItemsSource = schedule;

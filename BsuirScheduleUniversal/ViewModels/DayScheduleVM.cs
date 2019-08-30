@@ -83,10 +83,10 @@ namespace BsuirScheduleUniversal.ViewModels
             _dispatcherTimer.Start();
         }
 
-        public static async Task<DayScheduleVM> Create(string group, DateTime date, int subGroup)
+        public static async Task<DayScheduleVM> Create(ScheduleQuery query, DateTime date, int subGroup)
         {
             DayScheduleVM result = new DayScheduleVM(date);
-            var pairs = await Loader.LoadPairs(group, date, subGroup);
+            var pairs = await Loader.LoadPairs(query, date, subGroup);
             if (pairs == null) return result;
 
             foreach (var pair in pairs)
@@ -97,10 +97,10 @@ namespace BsuirScheduleUniversal.ViewModels
             return result;
         }
       
-        public static async Task<DayScheduleVM> CreateFull(string group, DayOfWeek day, int subGroup)
+        public static async Task<DayScheduleVM> CreateFull(ScheduleQuery query, DayOfWeek day, int subGroup)
         {
             DayScheduleVM result = new DayScheduleVM(day);
-            var pairs = await Loader.LoadPairsFull(group, day, subGroup);
+            var pairs = await Loader.LoadPairsFull(query, day, subGroup);
             if (pairs == null) return result;
 
             foreach (var pair in pairs)

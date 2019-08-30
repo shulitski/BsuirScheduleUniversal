@@ -49,10 +49,10 @@ namespace BsuirScheduleUniversal.ViewModels
             _dispatcherTimer.Start();
         }
 
-        public static async Task<ChartDayScheduleVM> Create(string group, DateTime date, int subGroup)
+        public static async Task<ChartDayScheduleVM> Create(ScheduleQuery query, DateTime date, int subGroup)
         {
             ChartDayScheduleVM result = new ChartDayScheduleVM(date);
-            var pairs = await Loader.LoadPairs(group, date, subGroup);
+            var pairs = await Loader.LoadPairs(query, date, subGroup);
             if (pairs == null) return result;
 
             foreach (var pair in pairs)

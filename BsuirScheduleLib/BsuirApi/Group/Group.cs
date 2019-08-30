@@ -16,5 +16,10 @@ namespace BsuirScheduleLib.BsuirApi.Group
         public int? course;
         public int id;
         public string calendarId;
+
+        public override string ToString()
+        {
+            return name;
+        }
     }
 }

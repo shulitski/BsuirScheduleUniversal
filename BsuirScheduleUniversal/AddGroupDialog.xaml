@@ -19,7 +19,8 @@
                    QueryIcon="Find"
                    TextChanged="GroupTextBox_TextChanged"
                    Loaded="GroupTextBox_Loaded"
-                   IsEnabled="False"     
+                   IsEnabled="False"
+                   QuerySubmitted="ScheduleTextBox_QuerySubmitted"
                    />
     </Grid>
 </ContentDialog>

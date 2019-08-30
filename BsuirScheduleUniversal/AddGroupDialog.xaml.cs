@@ -22,6 +22,8 @@ namespace BsuirScheduleUniversal
     public sealed partial class AddGroupDialog : ContentDialog
     {
         public string Value { get; set; }
+        public GroupApi.Group SelectedGroup;
+        public EmployeeApi.Employee SelectedEmployee;
         private List<GroupApi.Group> _groups;
         private List<EmployeeApi.Employee> _employees;
 
@@ -46,8 +48,9 @@ namespace BsuirScheduleUniversal
             {
                 if (_groups != null)
                 {
-                    var scheduleList = _groups.FindAll(g => g.name.Contains(sender.Text)).Select(g => g.name);
-                    scheduleList = scheduleList.Concat(_employees.FindAll(e => e.Contains(sender.Text)).Select(e => e.FullName));
+                    List<object> scheduleList = new List<object>();
+                    scheduleList.AddRange(_groups.FindAll(g => g.name.Contains(sender.Text)).ToList());
+                    scheduleList.AddRange(_employees.FindAll(e => e.Contains(sender.Text)));
                     ScheduleTextBox.ItemsSource = scheduleList;
                 }
             }
@@ -58,6 +61,21 @@ namespace BsuirScheduleUniversal
             _groups = await GroupApi.Loader.Load();
             _employees = await EmployeeApi.Loader.Load();
             ScheduleTextBox.IsEnabled = true;
+        }
+
+        private void ScheduleTextBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            if (args.ChosenSuggestion != null)
+            {
+                if (args.ChosenSuggestion is GroupApi.Group g)
+                    SelectedGroup = g;
+                else if (args.ChosenSuggestion is EmployeeApi.Employee e)
+                    SelectedEmployee = e;
+            }
+            else if (!string.IsNullOrEmpty(args.QueryText))
+            {
+                Value = args.QueryText;
+            }
         }
     }
 }

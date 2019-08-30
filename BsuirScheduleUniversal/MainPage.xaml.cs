@@ -39,9 +39,9 @@ namespace BsuirScheduleUniversal
             Reload();
             FillGroupCombobox();
             VM.PropertyChanged += (object sender, PropertyChangedEventArgs e) => {
-                if (e.PropertyName == "selectedGroup")
+                if (e.PropertyName == "selectedSchedule")
                     Reload();
-                else if (e.PropertyName == "GroupList")
+                else if (e.PropertyName == "ScheduleList")
                     FillGroupCombobox();
             };
         }
@@ -64,9 +64,9 @@ namespace BsuirScheduleUniversal
             _selectionLocked = true;
             GroupComboBox.Items.Clear();
             object selectedItem = null;
-            if (Loader.CachedGroupsArray != null)
+            if (Loader.CachedSchedulesArray != null)
             {
-                foreach (var group in Loader.CachedGroupsArray)
+                foreach (var group in Loader.CachedSchedulesArray)
                 {
                     var name = new TextBlock {Text = group};
                     var contextMenu = new MenuFlyout();
@@ -80,28 +80,30 @@ namespace BsuirScheduleUniversal
                     name.RightTapped += (s, e) => contextMenu.ShowAt(name, options);
                     
                     GroupComboBox.Items.Add(name);
-                    if (group == VM.SelectedGroup)
+                    if (group == VM.SelectedSchedule)
                         selectedItem = name;
                 }
             }
             Button loadBtn = new Button();
-            loadBtn.Content = "Load group...";
+            loadBtn.Content = "Load schedule...";
             loadBtn.HorizontalAlignment = HorizontalAlignment.Stretch;
-            loadBtn.Click += (s, e) => LoadGroup();
+            loadBtn.Click += (s, e) => LoadSchedule();
             GroupComboBox.Items.Add(loadBtn);
-            GroupComboBox.SelectedValue = GroupComboBox.Items.Where(i => (i as TextBlock)?.Text == VM.SelectedGroup).FirstOrDefault();
+            GroupComboBox.SelectedValue = GroupComboBox.Items.Where(i => (i as TextBlock)?.Text == VM.SelectedSchedule).FirstOrDefault();
             _selectionLocked = false;
         }
 
-        private async void LoadGroup()
+        private async void LoadSchedule()
         {
             AddGroupDialog dlg = new AddGroupDialog();
             await dlg.ShowAsync();
-            if (dlg.Value == null) return;
+            var name = dlg.Value ?? dlg.SelectedGroup?.name ?? dlg.SelectedEmployee?.FullName;
+            if (name == null)
+                return;
 
             try
             {
-                await VM.SetSelectedGroup(dlg.Value);
+                await VM.SetSelectedSchedule(dlg.Value, (dlg.SelectedEmployee?.id as int?)?.ToString());
             }
             catch (ScheduleLoadingException)
             {
@@ -117,12 +119,12 @@ namespace BsuirScheduleUniversal
                 if (_selectionLocked)
                     return;
                 string value = (GroupComboBox.SelectedItem as TextBlock)?.Text;
-                if (value != null && value != VM.SelectedGroup)
-                    VM.SelectedGroup = value;
+                if (value != null && value != VM.SelectedSchedule)
+                    VM.SelectedSchedule = value;
             }
             else // Select right item
             {
-                var item = GroupComboBox.Items.Where(i => (i as TextBlock)?.Text == VM.SelectedGroup && VM.SelectedGroup != null).FirstOrDefault();
+                var item = GroupComboBox.Items.Where(i => (i as TextBlock)?.Text == VM.SelectedSchedule && VM.SelectedSchedule != null).FirstOrDefault();
                 GroupComboBox.SelectedValue = item;
                 if (item == null)
                     GroupComboBox.PlaceholderText = "Add schedule";
@@ -131,7 +133,7 @@ namespace BsuirScheduleUniversal
 
         private void DeleteGroup(string group)
         {
-            VM.DeleteGroup(group);
+            VM.DeleteSchedule(group);
         }
 
         private void ChartButton_OnClick(object sender, RoutedEventArgs e)

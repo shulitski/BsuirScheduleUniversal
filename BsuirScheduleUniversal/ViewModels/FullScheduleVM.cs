@@ -30,7 +30,8 @@ namespace BsuirScheduleUniversal.ViewModels
         private int _currentDayIndex;
         private DateTime? _beginDate;
         private DateTime? _endDate;
-        private string _selectedGroup;
+        private string _selectedSchedule;
+        private string _selectedEmployeeId;
         #endregion
 
         #region Properties
@@ -60,11 +61,18 @@ namespace BsuirScheduleUniversal.ViewModels
         public ObservableCollection<DayScheduleVM> Schedule { get; set; }
         public Visibility LoadMoreVisibility => (Schedule != null && Schedule.Count > 0 && !IsFullSchedule) ? Visibility.Visible : Visibility.Collapsed;
 
-        public string SelectedGroup
+        public string SelectedSchedule
         {
-            get => _selectedGroup ?? (LocalSettings.Values["selectedGroup"] as string);
-            set => SetSelectedGroup(value);
+            get => _selectedSchedule ?? (LocalSettings.Values["selectedSchedule"] as string);
+            set => SetSelectedSchedule(value);
         }
+
+        public string SelectedEmployeeId
+        {
+            get => _selectedEmployeeId ?? (LocalSettings.Values["selectedEmployeeId"] as string);
+        }
+
+        public ScheduleQuery Query => (SelectedEmployeeId != null) ? new ScheduleQuery { Employee = SelectedEmployeeId } : new ScheduleQuery { Employee = SelectedSchedule };
 
         private int CheckedSubgroup
         {
@@ -94,22 +102,24 @@ namespace BsuirScheduleUniversal.ViewModels
             CheckedSubgroup = subgroup;
         }
 
-        public async Task SetSelectedGroup(string value)
+        public async Task SetSelectedSchedule(string value, string employeeId = null)
         {
-            var prevSelectedGroup = _selectedGroup;
-            _selectedGroup = value;
-            LocalSettings.Values["selectedGroup"] = _selectedGroup;
+            var prevSelectedSchedule = _selectedSchedule;
+            _selectedSchedule = value;
+            LocalSettings.Values["selectedSchedule"] = _selectedSchedule;
+            _selectedEmployeeId = employeeId;
+            LocalSettings.Values["selectedEmployeeId"] = _selectedEmployeeId;
             try
             {
                 await Reload();
             }
             catch (ScheduleLoadingException)
             {
-                _selectedGroup = prevSelectedGroup;  // Revert selected group
-                LocalSettings.Values["selectedGroup"] = prevSelectedGroup;
+                _selectedSchedule = prevSelectedSchedule;  // Revert selected schedule
+                LocalSettings.Values["selectedSchedule"] = prevSelectedSchedule;
                 throw;
             }
-            NotifyPropertyChanged("selectedGroup");
+            NotifyPropertyChanged("selectedSchedule");
         }
 
         private async Task<ObservableCollection<DayScheduleVM>> LoadSchedule()
@@ -128,7 +138,7 @@ namespace BsuirScheduleUniversal.ViewModels
 
             for (; day < _beginDate.Value.AddDays(30) || day.DayOfWeek != DayOfWeek.Monday; day = day.AddDays(1))
             {
-                schedule.Add(await DayScheduleVM.Create(SelectedGroup, day, CheckedSubgroup));
+                schedule.Add(await DayScheduleVM.Create(Query, day, CheckedSubgroup));
             }
 
             _endDate = day.AddDays(-1);
@@ -141,7 +151,7 @@ namespace BsuirScheduleUniversal.ViewModels
 
             for (var day = DayOfWeek.Monday; day != DayOfWeek.Sunday; day = (DayOfWeek)((int)(day + 1) % 7))
             {
-                schedule.Add(await DayScheduleVM.CreateFull(SelectedGroup, day, CheckedSubgroup));
+                schedule.Add(await DayScheduleVM.CreateFull(Query, day, CheckedSubgroup));
             }
             return schedule;
         }
@@ -165,10 +175,10 @@ namespace BsuirScheduleUniversal.ViewModels
             try
             {
                 Schedule = null;
-                if (SelectedGroup != null)
+                if (SelectedSchedule != null)
                 {
                     Schedule = IsFullSchedule ? await LoadFullSchedule() : await LoadSchedule();
-                    Loader.AddScheduleUpdateListener(OnScheduleUpdated, SelectedGroup);
+                    Loader.AddScheduleUpdateListener(OnScheduleUpdated, SelectedSchedule);
                 }
             }
             catch (ScheduleLoadingException e)
@@ -194,7 +204,7 @@ namespace BsuirScheduleUniversal.ViewModels
                     ? (_endDate   =   _endDate.Value.AddDays( 1)).Value 
                     : (_beginDate = _beginDate.Value.AddDays(-1)).Value;
 
-                var daySchedule = await DayScheduleVM.Create(SelectedGroup, date, CheckedSubgroup);
+                var daySchedule = await DayScheduleVM.Create(Query, date, CheckedSubgroup);
 
                 if (down)
                     Schedule.Add(daySchedule);
@@ -205,13 +215,13 @@ namespace BsuirScheduleUniversal.ViewModels
             NotifyPropertyChanged("Schedule");
         }
 
-        public async void DeleteGroup(string group)
+        public async void DeleteSchedule(string name)
         {
-            await Loader.DeleteGroup(group);
-            if (SelectedGroup == group)
-                SelectedGroup = null;
+            await Loader.DeleteSchedule(name);
+            if (SelectedSchedule == name)
+                SelectedSchedule = null;
             else
-                NotifyPropertyChanged("GroupList");
+                NotifyPropertyChanged("ScheduleList");
         }
 
         #endregion
