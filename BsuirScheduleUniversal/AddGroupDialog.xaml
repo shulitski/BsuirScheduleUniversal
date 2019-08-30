@@ -13,6 +13,13 @@
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
 
     <Grid>
-        <TextBox x:Name="GroupTextBox" PlaceholderText="Group number"/>
+        <AutoSuggestBox x:Name="GroupTextBox" 
+                   PlaceholderText="Group number" 
+                   HorizontalAlignment="Stretch"
+                   QueryIcon="Find"
+                   TextChanged="GroupTextBox_TextChanged"
+                   Loaded="GroupTextBox_Loaded"
+                   IsEnabled="False"     
+                   />
     </Grid>
 </ContentDialog>

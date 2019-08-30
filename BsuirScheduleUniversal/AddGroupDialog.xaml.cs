@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BsuirScheduleLib.BsuirApi.Group;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,10 +21,11 @@ namespace BsuirScheduleUniversal
     public sealed partial class AddGroupDialog : ContentDialog
     {
         public string Value { get; set; }
+        private List<Group> _groups;
 
         public AddGroupDialog()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
@@ -34,6 +36,21 @@ namespace BsuirScheduleUniversal
         private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             Value = null;
+        }
+
+        private void GroupTextBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                if (_groups != null)
+                    GroupTextBox.ItemsSource = _groups.FindAll(g => g.name.Contains(sender.Text)).Select(g => g.name);
+            }
+        }
+
+        private async void GroupTextBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            _groups = await Loader.Load();
+            GroupTextBox.IsEnabled = true;
         }
     }
 }

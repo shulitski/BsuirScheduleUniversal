@@ -107,6 +107,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BsuirApi\Constants.cs" />
+    <Compile Include="BsuirApi\Group\Group.cs" />
+    <Compile Include="BsuirApi\Group\Loader.cs" />
     <Compile Include="BsuirApi\LastUpdate\LastUpdate.cs" />
     <Compile Include="BsuirApi\LastUpdate\Loader.cs" />
     <Compile Include="BsuirApi\Schedule\Employee.cs" />

@@ -11,5 +11,6 @@ namespace BsuirScheduleLib.BsuirApi
         private const string domain = "https://journal.bsuir.by";
         public const string studentScheduleFormat = domain + "/api/v1/studentGroup/schedule?studentGroup={0}";
         public const string lastUpdateFormat = domain + "/api/v1/studentGroup/lastUpdateDate?studentGroup={0}";
+        public const string groupsUrl = domain + "/api/v1/groups";
     }
 }
