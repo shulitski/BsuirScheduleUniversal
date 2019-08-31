@@ -24,6 +24,7 @@ using Windows.ApplicationModel.Core;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Popups;
+using EmployeeApi = BsuirScheduleLib.BsuirApi.Employee;
 
 namespace BsuirScheduleUniversal
 {
@@ -37,12 +38,12 @@ namespace BsuirScheduleUniversal
         {
             InitializeComponent();
             Reload();
-            FillGroupCombobox();
+            FillScheduleCombobox();
             VM.PropertyChanged += (object sender, PropertyChangedEventArgs e) => {
                 if (e.PropertyName == "selectedSchedule")
                     Reload();
                 else if (e.PropertyName == "ScheduleList")
-                    FillGroupCombobox();
+                    FillScheduleCombobox();
             };
         }
 
@@ -56,40 +57,40 @@ namespace BsuirScheduleUniversal
         {
             if (ScheduleGridView == null) return;
             await VM.Reload();
-            FillGroupCombobox();
+            await FillScheduleCombobox();
         }
 
-        private void FillGroupCombobox()
+        private async Task FillScheduleCombobox()
         {
             _selectionLocked = true;
-            GroupComboBox.Items.Clear();
-            object selectedItem = null;
+            var employees = await EmployeeApi.Loader.Get();
+            ScheduleComboBox.Items.Clear();
             if (Loader.CachedSchedulesArray != null)
             {
-                foreach (var group in Loader.CachedSchedulesArray)
+                foreach (var scheduleName in Loader.CachedSchedulesArray)
                 {
-                    var name = new TextBlock {Text = group};
+                    var employee = employees.Find(e => e.id.ToString() == scheduleName);
+                    var nameTextBlock = new TextBlock {Text = (employee != null) ? employee.FullName : scheduleName};
                     var contextMenu = new MenuFlyout();
-                    name.ContextFlyout = contextMenu;
+                    nameTextBlock.ContextFlyout = contextMenu;
                     MenuFlyoutItem deleteMenuItem = new MenuFlyoutItem();
                     deleteMenuItem.Text = "Delete";
-                    deleteMenuItem.Click += (s, e) => DeleteGroup(group);
+                    deleteMenuItem.Click += (s, e) => DeleteSchedule(scheduleName);
                     contextMenu.Items.Add(deleteMenuItem);
                     var options = new FlyoutShowOptions();
                     options.ShowMode = FlyoutShowMode.Transient;
-                    name.RightTapped += (s, e) => contextMenu.ShowAt(name, options);
-                    
-                    GroupComboBox.Items.Add(name);
-                    if (group == VM.SelectedSchedule)
-                        selectedItem = name;
+                    nameTextBlock.RightTapped += (s, e) => contextMenu.ShowAt(nameTextBlock, options);
+                    nameTextBlock.Tag = scheduleName;
+
+                    ScheduleComboBox.Items.Add(nameTextBlock);
                 }
             }
             Button loadBtn = new Button();
             loadBtn.Content = "Load schedule...";
             loadBtn.HorizontalAlignment = HorizontalAlignment.Stretch;
             loadBtn.Click += (s, e) => LoadSchedule();
-            GroupComboBox.Items.Add(loadBtn);
-            GroupComboBox.SelectedValue = GroupComboBox.Items.Where(i => (i as TextBlock)?.Text == VM.SelectedSchedule).FirstOrDefault();
+            ScheduleComboBox.Items.Add(loadBtn);
+            ScheduleComboBox.SelectedValue = ScheduleComboBox.Items.Where(i => (i as TextBlock)?.Text == VM.SelectedSchedule).FirstOrDefault();
             _selectionLocked = false;
         }
 
@@ -107,7 +108,7 @@ namespace BsuirScheduleUniversal
             }
             catch (ScheduleLoadingException)
             {
-                MessageDialog errorDlg = new MessageDialog("Invalid group id or teacher name");
+                MessageDialog errorDlg = new MessageDialog("Invalid group id or employee name");
                 await errorDlg.ShowAsync();
             }
             catch (Exception e)
@@ -117,33 +118,33 @@ namespace BsuirScheduleUniversal
 #else
                 var message = "Unknown error";
 #endif
-                MessageDialog errorDlg = new MessageDialog("Invalid group id or teacher name");
+                MessageDialog errorDlg = new MessageDialog(message);
                 await errorDlg.ShowAsync();
             }
         }
 
-        private void GroupSelected(object sender, SelectionChangedEventArgs e)
+        private void ScheduleSelected(object sender, SelectionChangedEventArgs e)
         {
-            if (GroupComboBox.SelectedItem is TextBlock)
+            if (ScheduleComboBox.SelectedItem is TextBlock textBlock)
             {
                 if (_selectionLocked)
                     return;
-                string value = (GroupComboBox.SelectedItem as TextBlock)?.Text;
+                string value = textBlock?.Tag as string;
                 if (value != null && value != VM.SelectedSchedule)
                     VM.SelectedSchedule = value;
             }
             else // Select right item
             {
-                var item = GroupComboBox.Items.Where(i => (i as TextBlock)?.Text == VM.SelectedSchedule && VM.SelectedSchedule != null).FirstOrDefault();
-                GroupComboBox.SelectedValue = item;
+                var item = ScheduleComboBox.Items.Where(i => (i as TextBlock)?.Tag.ToString() == VM.SelectedSchedule && VM.SelectedSchedule != null).FirstOrDefault();
+                ScheduleComboBox.SelectedValue = item;
                 if (item == null)
-                    GroupComboBox.PlaceholderText = "Add schedule";
+                    ScheduleComboBox.PlaceholderText = "Add schedule";
             }
         }
 
-        private void DeleteGroup(string group)
+        private void DeleteSchedule(string name)
         {
-            VM.DeleteSchedule(group);
+            VM.DeleteSchedule(name);
         }
 
         private void ChartButton_OnClick(object sender, RoutedEventArgs e)

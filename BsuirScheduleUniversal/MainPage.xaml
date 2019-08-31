@@ -20,10 +20,10 @@
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Grid.Row="0">
-            <ComboBox x:Name="GroupComboBox" 
+            <ComboBox x:Name="ScheduleComboBox" 
                      PlaceholderText="{Binding SelectedGroup, Mode=OneWay}"
                      Width="150"
-                     SelectionChanged="GroupSelected">
+                     SelectionChanged="ScheduleSelected">
             </ComboBox>
             <StackPanel Margin="10 0 0 0" Orientation="Horizontal"  >
                 <TextBlock Text="SubGroup:" Margin="0 0 10 0" VerticalAlignment="Center"/>
