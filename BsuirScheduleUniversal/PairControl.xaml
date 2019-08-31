@@ -38,7 +38,7 @@
         </StackPanel>
         <StackPanel controls:DockPanel.Dock="Right" Margin="0 0 25 0" Orientation="Vertical">
             <TextBlock HorizontalAlignment="Right" Foreground="Teal" FontSize="12" Visibility="{Binding SubgroupVisibility}">
-                <Run Text="subgroup "/>
+                <Run x:Uid="PairControl_Subgroup"/>
                 <Run Text="{Binding NumSubgroup}"/>
             </TextBlock>
             <TextBlock HorizontalAlignment="Right" Text="{Binding EmployeeShortName}" Foreground="Teal" FontSize="12"/>

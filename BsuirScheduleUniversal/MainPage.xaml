@@ -20,20 +20,21 @@
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Grid.Row="0">
-            <ComboBox x:Name="ScheduleComboBox" 
-                     PlaceholderText="{Binding SelectedGroup, Mode=OneWay}"
-                     Width="150"
+            <ComboBox x:Name="ScheduleComboBox"
+                      x:Uid="AddSchedule"
+                     Width="200"
                      SelectionChanged="ScheduleSelected">
+                <Button x:Uid="LoadSchedule" HorizontalAlignment="Stretch" Click="AddScheduleButton_Click"/>
             </ComboBox>
             <StackPanel Margin="10 0 0 0" Orientation="Horizontal"  >
-                <TextBlock Text="SubGroup:" Margin="0 0 10 0" VerticalAlignment="Center"/>
-                <RadioButton Content="All" Tag="0" Checked="SubgroupChecked" IsChecked="{Binding IsSubgroup0}"/>
-                <RadioButton Content="First" Tag="1" Checked="SubgroupChecked" IsChecked="{Binding IsSubgroup1}"/>
-                <RadioButton Content="Second" Tag="2" Checked="SubgroupChecked" IsChecked="{Binding IsSubgroup2}"/>
+                <TextBlock x:Uid="Subgroup" Margin="0 0 10 0" VerticalAlignment="Center"/>
+                <RadioButton x:Uid="Subgroup_All" Tag="0" Checked="SubgroupChecked" IsChecked="{Binding IsSubgroup0}"/>
+                <RadioButton x:Uid="Subgroup_First" Tag="1" Checked="SubgroupChecked" IsChecked="{Binding IsSubgroup1}"/>
+                <RadioButton x:Uid="Subgroup_Second" Tag="2" Checked="SubgroupChecked" IsChecked="{Binding IsSubgroup2}"/>
             </StackPanel>
-            <CheckBox Content="Full schedule" IsChecked="{Binding IsFullSchedule, Mode=TwoWay}"/>
+            <CheckBox x:Uid="FullSchedule" IsChecked="{Binding IsFullSchedule, Mode=TwoWay}"/>
             <ProgressRing IsActive="{Binding IsBusy, Mode=OneWay}" Foreground="White" />
-            <Button Click="ChartButton_OnClick">Chart</Button>
+            <Button x:Uid="Chart" Click="ChartButton_OnClick"/>
         </StackPanel>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" 
                       VerticalAlignment="Stretch"
@@ -44,12 +45,11 @@
                     <RowDefinition></RowDefinition>
                     <RowDefinition Height="35"></RowDefinition>
                 </Grid.RowDefinitions>
-                <Button HorizontalAlignment="Stretch" 
+                <Button x:Uid="LoadMoreButton"
+                        HorizontalAlignment="Stretch" 
                         Grid.Row="0" 
                         Click="LoadUpClick" 
-                        Visibility="{Binding LoadMoreVisibility, Mode=OneWay}">
-                    Load more
-                </Button>
+                        Visibility="{Binding LoadMoreVisibility, Mode=OneWay}"/>
                 <GridView DataContext="{Binding Schedule, Mode=TwoWay}" ItemsSource="{Binding Mode=TwoWay}" x:Name="ScheduleGridView" Width="2000" SelectionMode="None" Grid.Row="1">
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="vm:DayScheduleVM">

@@ -20,24 +20,20 @@
         </Grid.RowDefinitions>
         <Button Style="{StaticResource NavigationBackButtonNormalStyle}" Click="BackClick"/>
         <StackPanel Width="350" Grid.Row="2">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Foreground="Teal" FontSize="15">
-                    <Run Text="Subject: "/>
-                    <Run Text="{Binding subject}" />
-                </TextBlock>
-            </StackPanel>
-            <StackPanel Orientation="Vertical">
-                <TextBlock Foreground="Teal" FontSize="15">
-                    <Run Text="Start time: "/>
-                    <Run Text="{Binding startLessonTime}" />
-                </TextBlock>
-                <TextBlock Foreground="Teal" FontSize="15">
-                    <Run Text="End time: "/>
-                    <Run Text="{Binding endLessonTime}" />
-                </TextBlock>
-            </StackPanel>
+            <TextBlock Foreground="Teal" FontSize="15">
+                <Run x:Uid="PairPage_Subject"/>
+                <Run Text="{Binding subject}" />
+            </TextBlock>
+            <TextBlock Foreground="Teal" FontSize="15">
+                <Run x:Uid="PairPage_StartTime"/>
+                <Run Text="{Binding startLessonTime}" />
+            </TextBlock>
+            <TextBlock Foreground="Teal" FontSize="15">
+                <Run x:Uid="PairPage_EndTime"/>
+                <Run Text="{Binding endLessonTime}" />
+            </TextBlock>
             <StackPanel Orientation="Horizontal" >
-                <TextBlock Text="Weeks:" Margin="0 0 10 0 " Foreground="Teal" FontSize="15" />
+                <TextBlock x:Uid="PairPage_Weeks" Margin="0 0 10 0 " Foreground="Teal" FontSize="15" />
                 <Grid Width="40" >
                     <Rectangle Stroke="Aqua" Fill="{Binding WeekBrush1}" />
                     <TextBlock Text="1" HorizontalAlignment="Center" Foreground="Teal" FontSize="15" />
@@ -55,32 +51,33 @@
                     <TextBlock Text="4" HorizontalAlignment="Center" Foreground="Teal" FontSize="15" />
                 </Grid>
             </StackPanel>
+
             <TextBlock Foreground="Teal" FontSize="15">
-                <Run Text="Lesson type: "/>
+                <Run x:Uid="PairPage_LessonType"/>
                 <Run Text="{Binding LessonType}" Foreground="{Binding LessonTypeBrush}"/>
             </TextBlock>
             <Border BorderThickness="1" BorderBrush="{Binding AuditoryColor}">
                 <TextBlock Foreground="Teal"  FontSize="15">
-                    <Run Text="Auditory: "/>
+                    <Run x:Uid="PairPage_Auditory"/>
                     <Run Text="{Binding Auditory}"/>
                 </TextBlock>
             </Border>
             <TextBlock Foreground="Teal" FontSize="15">
-                <Run Text="Subgroup: "/>
+                <Run x:Uid="PairPage_Subgroup"/>
                 <Run Text="{Binding NumSubgroup}"/>
             </TextBlock>
             <TextBlock Foreground="Teal" FontSize="15">
-                <Run Text="Teacher: "/>
+                <Run x:Uid="PairPage_Teacher"/>
                 <Run Text="{Binding EmployeeLastName}"/>
                 <Run Text="{Binding EmployeeFirstName}"/>
                 <Run Text="{Binding EmployeeMiddleName}"/>
             </TextBlock>
             <TextBlock Foreground="Teal" FontSize="15">
-                <Run Text="Rank: "/>
+                <Run x:Uid="PairPage_Rank"/>
                 <Run Text="{Binding EmployeeRank}"/>
             </TextBlock>
             <TextBlock Foreground="Teal" FontSize="15" TextWrapping="WrapWholeWords">
-                <Run Text="Note: "/>
+                <Run x:Uid="PairPage_Note"/>
                 <Run Foreground="Brown" Text="{Binding Note}"/>
             </TextBlock>
             <Image Width="100" Height="100">

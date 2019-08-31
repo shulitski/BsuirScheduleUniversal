@@ -29,10 +29,17 @@ namespace BsuirScheduleUniversal.ViewModels
         private bool IsToday => (_date == null) ? (_dayOfWeek.Value == DateTime.Today.DayOfWeek) : (_date.Value.Date == DateTime.Today.Date);
         private bool IsHolyday => _date?.IsHolyday() ?? (_dayOfWeek.Value == DayOfWeek.Sunday);
         public List<PairVM> Pairs { get; set; } = new List<PairVM>();
-        public string WeekDayName => (_date == null) ? _dayOfWeek.ToString() : $"{_date.Value:dd.MM.yyyy} {_date.Value.DayOfWeek.ToString()}";
+        public string WeekDayName => (_date == null) 
+            ? GetDayName(_dayOfWeek.Value) 
+            : $"{_date.Value:dd.MM.yyyy} {GetDayName(_date.Value.DayOfWeek)}";
         public Brush Border => GetBorderAndBackground().Item1;
         public Brush Background => GetBorderAndBackground().Item2;
         
+        private string GetDayName(DayOfWeek day)
+        {
+            return CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(day);
+        }
+
         private (Brush, Brush) GetBorderAndBackground()
         {
             Color borderColor;

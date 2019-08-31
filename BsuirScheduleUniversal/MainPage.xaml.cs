@@ -67,7 +67,7 @@ namespace BsuirScheduleUniversal
             if (Loader.CachedSchedulesArray != null)
                 foreach (var scheduleName in Loader.CachedSchedulesArray)
                     items.Add(await CreateScheduleTextBlock(scheduleName));
-            items.Add(CreateLoadButton());
+            items.Add(ScheduleComboBox.Items.First(i => i is Button));
             lock(ScheduleComboBox)
             {
                 ScheduleComboBox.Items.Clear();
@@ -88,17 +88,8 @@ namespace BsuirScheduleUniversal
 
             var selectedItem = ScheduleComboBox.Items.Where(condition).FirstOrDefault();
             ScheduleComboBox.SelectedValue = selectedItem;
-            if (selectedItem == null)
-                ScheduleComboBox.PlaceholderText = "Add schedule";
-        }
-
-        private Button CreateLoadButton()
-        {
-            Button result = new Button();
-            result.Content = "Load schedule...";
-            result.HorizontalAlignment = HorizontalAlignment.Stretch;
-            result.Click += (s, e) => LoadSchedule();
-            return result;
+            //if (selectedItem == null)
+            //    ScheduleComboBox.PlaceholderText = "Add schedule";
         }
 
         private async Task<TextBlock> CreateScheduleTextBlock(string scheduleName)
@@ -192,6 +183,11 @@ namespace BsuirScheduleUniversal
         private void DayScheduleControl_PairDeleted()
         {
             Reload();
+        }
+
+        private void AddScheduleButton_Click(object sender, RoutedEventArgs e)
+        {
+            LoadSchedule();
         }
     }
 }
