@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +23,9 @@ namespace BsuirScheduleLib.BsuirApi.Employee
         public bool Contains(string str)
         {
             var parts = str.Split(' ');
-            return parts.All(p => firstName.Contains(p) || middleName.Contains(p) || lastName.Contains(p));
+            Func<string, string, bool> contains = (name, substr) =>
+                CultureInfo.CurrentUICulture.CompareInfo.IndexOf(name, substr, CompareOptions.IgnoreCase) >= 0;
+            return parts.All(p => contains(firstName, p) || contains(middleName, p) || contains(lastName, p));
         }
 
         public override bool Equals(object obj)

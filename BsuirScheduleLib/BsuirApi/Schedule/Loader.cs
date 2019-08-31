@@ -116,8 +116,8 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
                 schedule = response.schedules.Find(s => Utils.StringToDayOfWeek(s.weekday) == day.DayOfWeek);
 
                 return schedule?.schedule?.FindAll(pair =>
-                Utils.FilterSubgroup(subgroup, pair.numSubgroup)
-                && pair.weekNumber.Contains(day.BsuirWeekNum()));
+                    Utils.FilterSubgroup(subgroup, pair.numSubgroup)
+                    && pair.weekNumber.Contains(day.BsuirWeekNum()));
             }
         }
 

@@ -54,6 +54,7 @@ namespace BsuirScheduleLib.BsuirApi
 
         internal static int BsuirWeekNum(this DateTime date)
         {
+
             if (date >= _weekCalculationBaseDate)
             {
                 var interval = date - _weekCalculationBaseDate;
