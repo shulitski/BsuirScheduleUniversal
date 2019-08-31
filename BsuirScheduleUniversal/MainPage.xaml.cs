@@ -90,7 +90,7 @@ namespace BsuirScheduleUniversal
             loadBtn.HorizontalAlignment = HorizontalAlignment.Stretch;
             loadBtn.Click += (s, e) => LoadSchedule();
             ScheduleComboBox.Items.Add(loadBtn);
-            ScheduleComboBox.SelectedValue = ScheduleComboBox.Items.Where(i => (i as TextBlock)?.Text == VM.SelectedSchedule).FirstOrDefault();
+            ScheduleComboBox.SelectedValue = ScheduleComboBox.Items.Where(i => (i as TextBlock)?.Tag.ToString() == VM.SelectedSchedule).FirstOrDefault();
             _selectionLocked = false;
         }
 
