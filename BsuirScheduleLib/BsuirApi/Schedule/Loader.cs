@@ -15,7 +15,7 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
     public static class Loader
     {
         private static readonly Dictionary<string, ScheduleResponse> cache = new Dictionary<string, ScheduleResponse>();
-        private static StorageFolder LocalFolder => ApplicationData.Current.LocalFolder;
+        private static StorageFolder CacheFolder => ApplicationData.Current.LocalCacheFolder;
         private static ApplicationDataContainer LocalSettings => ApplicationData.Current.LocalSettings;
         private static Action<ScheduleResponse> _onScheluleUpdated;
         private static Timer _updateTimer;
@@ -37,8 +37,8 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
         private static async Task SaveToFile(string json, string name)
         {
             string fileName = $"schedule_{name}.json";
-            StorageFile sampleFile = await LocalFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
-            await FileIO.WriteTextAsync(sampleFile, json);
+            StorageFile scheduleFile = await CacheFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+            await FileIO.WriteTextAsync(scheduleFile, json);
             if (string.IsNullOrEmpty(CachedSchedules) || !CachedSchedules.Contains(name))
             {
                 if (string.IsNullOrEmpty(CachedSchedules))
@@ -67,7 +67,7 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
             ScheduleResponse scheduleResponse = null;
             if (allowCache && IsScheduleCached(query.Value))
             {
-                StorageFile file = await LocalFolder.GetFileAsync(fileName);
+                StorageFile file = await CacheFolder.GetFileAsync(fileName);
                 json = await FileIO.ReadTextAsync(file);
                 scheduleResponse = JsonConvert.DeserializeObject<ScheduleResponse>(json);
             }
@@ -195,7 +195,7 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
             if (IsScheduleCached(name))
             {
                 string fileName = $"schedule_{name}.json";
-                StorageFile file = await LocalFolder.GetFileAsync(fileName);
+                StorageFile file = await CacheFolder.GetFileAsync(fileName);
                 string json = await FileIO.ReadTextAsync(file);
                 ScheduleResponse scheduleResponse = JsonConvert.DeserializeObject<ScheduleResponse>(json);
                 foreach (var schedule in scheduleResponse.schedules)
@@ -223,7 +223,7 @@ namespace BsuirScheduleLib.BsuirApi.Schedule
             if (IsScheduleCached(name))
             {
                 string fileName = $"schedule_{name}.json";
-                StorageFile file = await LocalFolder.GetFileAsync(fileName);
+                StorageFile file = await CacheFolder.GetFileAsync(fileName);
                 await file.DeleteAsync();
                 string newCachedScheduless = "";
                 foreach(var cachedSchedule in CachedSchedulesArray)

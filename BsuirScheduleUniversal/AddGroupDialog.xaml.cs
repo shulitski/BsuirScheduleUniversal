@@ -24,8 +24,8 @@ namespace BsuirScheduleUniversal
         public string Value { get; set; }
         public GroupApi.Group SelectedGroup;
         public EmployeeApi.Employee SelectedEmployee;
-        private List<GroupApi.Group> _groups;
-        private List<EmployeeApi.Employee> _employees;
+        private List<GroupApi.Group> _groups = new List<GroupApi.Group>();
+        private List<EmployeeApi.Employee> _employees = new List<EmployeeApi.Employee>();
 
         public AddGroupDialog()
         {
@@ -58,9 +58,10 @@ namespace BsuirScheduleUniversal
 
         private async void GroupTextBox_Loaded(object sender, RoutedEventArgs e)
         {
-            _groups = await GroupApi.Loader.Load();
-            _employees = await EmployeeApi.Loader.Load();
-            ScheduleTextBox.IsEnabled = true;
+            _groups = await GroupApi.Loader.Get();
+            _employees = await EmployeeApi.Loader.Get();
+            GroupApi.Loader.UpdateCache(groups => { _groups = groups; });
+            EmployeeApi.Loader.UpdateCache(employees => { _employees = employees; });
         }
 
         private void ScheduleTextBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
