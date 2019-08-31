@@ -63,35 +63,60 @@ namespace BsuirScheduleUniversal
         private async Task FillScheduleCombobox()
         {
             _selectionLocked = true;
-            var employees = await EmployeeApi.Loader.Get();
-            ScheduleComboBox.Items.Clear();
+            List<object> items = new List<object>();
             if (Loader.CachedSchedulesArray != null)
-            {
                 foreach (var scheduleName in Loader.CachedSchedulesArray)
-                {
-                    var employee = employees.Find(e => e.id.ToString() == scheduleName);
-                    var nameTextBlock = new TextBlock {Text = (employee != null) ? employee.FullName : scheduleName};
-                    var contextMenu = new MenuFlyout();
-                    nameTextBlock.ContextFlyout = contextMenu;
-                    MenuFlyoutItem deleteMenuItem = new MenuFlyoutItem();
-                    deleteMenuItem.Text = "Delete";
-                    deleteMenuItem.Click += (s, e) => DeleteSchedule(scheduleName);
-                    contextMenu.Items.Add(deleteMenuItem);
-                    var options = new FlyoutShowOptions();
-                    options.ShowMode = FlyoutShowMode.Transient;
-                    nameTextBlock.RightTapped += (s, e) => contextMenu.ShowAt(nameTextBlock, options);
-                    nameTextBlock.Tag = scheduleName;
-
-                    ScheduleComboBox.Items.Add(nameTextBlock);
-                }
+                    items.Add(await CreateScheduleTextBlock(scheduleName));
+            items.Add(CreateLoadButton());
+            lock(ScheduleComboBox)
+            {
+                ScheduleComboBox.Items.Clear();
+                foreach (var item in items)
+                    ScheduleComboBox.Items.Add(item);
+                SetSelectedValueInCombobox();
             }
-            Button loadBtn = new Button();
-            loadBtn.Content = "Load schedule...";
-            loadBtn.HorizontalAlignment = HorizontalAlignment.Stretch;
-            loadBtn.Click += (s, e) => LoadSchedule();
-            ScheduleComboBox.Items.Add(loadBtn);
-            ScheduleComboBox.SelectedValue = ScheduleComboBox.Items.Where(i => (i as TextBlock)?.Tag.ToString() == VM.SelectedSchedule).FirstOrDefault();
             _selectionLocked = false;
+        }
+
+        private void SetSelectedValueInCombobox()
+        {
+            Func<object, bool> condition = (object item) =>
+            {
+                return (item as TextBlock)?.Tag.ToString() == VM.SelectedSchedule
+                && VM.SelectedSchedule != null;
+            };
+
+            var selectedItem = ScheduleComboBox.Items.Where(condition).FirstOrDefault();
+            ScheduleComboBox.SelectedValue = selectedItem;
+            if (selectedItem == null)
+                ScheduleComboBox.PlaceholderText = "Add schedule";
+        }
+
+        private Button CreateLoadButton()
+        {
+            Button result = new Button();
+            result.Content = "Load schedule...";
+            result.HorizontalAlignment = HorizontalAlignment.Stretch;
+            result.Click += (s, e) => LoadSchedule();
+            return result;
+        }
+
+        private async Task<TextBlock> CreateScheduleTextBlock(string scheduleName)
+        {
+            var employees = await EmployeeApi.Loader.Get();
+            var employee = employees.Find(e => e.id.ToString() == scheduleName);
+            var result = new TextBlock { Text = (employee != null) ? employee.FullName : scheduleName };
+            var contextMenu = new MenuFlyout();
+            result.ContextFlyout = contextMenu;
+            MenuFlyoutItem deleteMenuItem = new MenuFlyoutItem();
+            deleteMenuItem.Text = "Delete";
+            deleteMenuItem.Click += (s, e) => DeleteSchedule(scheduleName);
+            contextMenu.Items.Add(deleteMenuItem);
+            var options = new FlyoutShowOptions();
+            options.ShowMode = FlyoutShowMode.Transient;
+            result.RightTapped += (s, e) => contextMenu.ShowAt(result, options);
+            result.Tag = scheduleName;
+            return result;
         }
 
         private async void LoadSchedule()
@@ -135,10 +160,7 @@ namespace BsuirScheduleUniversal
             }
             else // Select right item
             {
-                var item = ScheduleComboBox.Items.Where(i => (i as TextBlock)?.Tag.ToString() == VM.SelectedSchedule && VM.SelectedSchedule != null).FirstOrDefault();
-                ScheduleComboBox.SelectedValue = item;
-                if (item == null)
-                    ScheduleComboBox.PlaceholderText = "Add schedule";
+                SetSelectedValueInCombobox();
             }
         }
 
