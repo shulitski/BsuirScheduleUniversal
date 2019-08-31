@@ -110,6 +110,16 @@ namespace BsuirScheduleUniversal
                 MessageDialog errorDlg = new MessageDialog("Invalid group id or teacher name");
                 await errorDlg.ShowAsync();
             }
+            catch (Exception e)
+            {
+#if DEBUG
+                var message = e.Message;
+#else
+                var message = "Unknown error";
+#endif
+                MessageDialog errorDlg = new MessageDialog("Invalid group id or teacher name");
+                await errorDlg.ShowAsync();
+            }
         }
 
         private void GroupSelected(object sender, SelectionChangedEventArgs e)

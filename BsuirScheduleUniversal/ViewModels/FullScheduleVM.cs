@@ -72,7 +72,7 @@ namespace BsuirScheduleUniversal.ViewModels
             get => _selectedEmployeeId ?? (LocalSettings.Values["selectedEmployeeId"] as string);
         }
 
-        public ScheduleQuery Query => (SelectedEmployeeId != null) ? new ScheduleQuery { Employee = SelectedEmployeeId } : new ScheduleQuery { Employee = SelectedSchedule };
+        public ScheduleQuery Query => (SelectedEmployeeId != null) ? new ScheduleQuery { Employee = SelectedEmployeeId } : new ScheduleQuery { Value = SelectedSchedule };
 
         private int CheckedSubgroup
         {
@@ -186,10 +186,7 @@ namespace BsuirScheduleUniversal.ViewModels
                 IsBusy = false;
                 throw;
             }
-            catch (Exception e)
-            {
-                // ignored
-            }
+            
             NotifyPropertyChanged("Schedule");
             NotifyPropertyChanged("LoadMoreVisibility");
             IsBusy = false;
